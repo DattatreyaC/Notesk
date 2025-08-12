@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 const LandingPage = () => {
     return (
         <>
-            <header></header>
             <main className="bg flex flex-col gap-5 items-start justify-center border h-screen w-full pl-3  bg-white/10">
                 <div>
                     <h1 className="text-4xl font-bold">

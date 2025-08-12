@@ -17,12 +17,16 @@ const Sidebar = () => {
 
     return (
         <aside
+            onMouseEnter={() => setSidebarOpen(true)}
+            onMouseLeave={() => setSidebarOpen(false)}
             className={`h-screen ${
-                sidebarOpen ? "w-[25%]" : "w-11"
-            } border bg-black transition-all duration-300 ease-in-out fixed flex flex-col px-1`}
+                sidebarOpen
+                    ? "w-[50%] sm:w-[40%] md:w-[25%] lg:w-[18%]"
+                    : "w-11"
+            }  border bg-black transition-all duration-300 ease-out fixed flex flex-col px-1 shadow-[0_0_5px_black]`}
         >
             <div
-                className={`hover:bg-white/30 absolute top-2 rounded-sm p-[1.5px] ${
+                className={`hover:bg-white/30 absolute top-2 rounded-sm p-[3px] ${
                     sidebarOpen ? "right-2" : "right-2"
                 } transition-colors duration-150`}
             >
@@ -59,7 +63,7 @@ const Sidebar = () => {
                 </Link>
 
                 <Link
-                    to={"/tasks"}
+                    to={"/notes"}
                     className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
                 >
                     <NotebookPen className="text-white" />
@@ -87,7 +91,7 @@ const Sidebar = () => {
                 </Link>
 
                 <Link
-                    to={"/tasks"}
+                    to={"/posts"}
                     className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
                 >
                     <SquarePen className="text-white" />
@@ -101,7 +105,7 @@ const Sidebar = () => {
                 </Link>
 
                 <Link
-                    to={"/tasks"}
+                    to={"/starred"}
                     className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
                 >
                     <Star className="ri-star-s-fill text-white" />
@@ -117,7 +121,7 @@ const Sidebar = () => {
                 </Link>
 
                 <Link
-                    to={"/tasks"}
+                    to={"/friends"}
                     className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
                 >
                     <Users className="text-white" />
