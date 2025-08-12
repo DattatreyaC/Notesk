@@ -5,7 +5,7 @@ const LandingPage = () => {
     return (
         <>
             <header></header>
-            <main className="flex flex-col gap-5 items-start justify-center border h-screen w-full pl-3">
+            <main className="bg flex flex-col gap-5 items-start justify-center border h-screen w-full pl-3  bg-white/10">
                 <div>
                     <h1 className="text-4xl font-bold">
                         Manage your notes and tasks,
@@ -24,7 +24,7 @@ const LandingPage = () => {
                     <div className="w-max h-max group relative">
                         <Link
                             to={"/signup"}
-                            className="border border-black block text-lg bg-black text-white hover:bg-white hover:text-black py-1 px-3"
+                            className="border border-black block text-lg bg-black text-white hover:bg-white hover:text-black py-1 px-3 z-40"
                         >
                             Sign Up
                         </Link>
@@ -32,13 +32,13 @@ const LandingPage = () => {
                     </div>
 
                     <div className="w-max h-max group relative">
+                        <div className="bg-black w-full h-full absolute left-0 top-0 group-hover:translate-y-1 group-hover:translate-x-1 transition-transform duration-150 z-[-1]"></div>
                         <Link
                             to={"/login"}
-                            className="border border-black block text-lg bg-black/50 text-white hover:bg-white hover:text-black py-1 px-3"
+                            className="border border-black block text-lg bg-black text-white hover:bg-white hover:text-black py-1 px-3 z-40"
                         >
                             Login
                         </Link>
-                        <div className="bg-black w-full h-full absolute left-0 top-0 group-hover:translate-y-1 group-hover:translate-x-1 transition-transform duration-150 z-[-1]"></div>
                     </div>
                 </div>
             </main>
