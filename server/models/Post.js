@@ -18,26 +18,15 @@ const postSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
-        likes: {
+        upvotes: {
             type: Number,
             default: 0,
         },
-        laughs: {
+        downvotes: {
             type: Number,
             default: 0,
         },
-
-        hearts: {
-            type: Number,
-            default: 0,
-        },
-
-        sobs: {
-            type: Number,
-            default: 0,
-        },
-
-        prayers: {
+        stars: {
             type: Number,
             default: 0,
         },
@@ -46,12 +35,12 @@ const postSchema = new mongoose.Schema(
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Comment",
                 default: [],
-            }
+            },
         ],
     },
     {
         timestamps: true,
-    },
+    }
 );
 
 const Post = mongoose.model("Post", postSchema);

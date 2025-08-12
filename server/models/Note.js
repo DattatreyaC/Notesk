@@ -20,10 +20,17 @@ const noteSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
+
+        tags: [
+            {
+                type: String,
+                default: [],
+            },
+        ],
     },
     {
         timestamps: true,
-    },
+    }
 );
 
 const Note = mongoose.model("Note", noteSchema);

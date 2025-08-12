@@ -58,10 +58,26 @@ const userSchema = new mongoose.Schema(
                 default: [],
             },
         ],
+
+        starredPosts: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Post",
+                default: [],
+            },
+        ],
+
+        tasks: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Task ",
+                default: [],
+            },
+        ],
     },
     {
         timestamps: true,
-    },
+    }
 );
 
 const User = mongoose.model("User", userSchema);
