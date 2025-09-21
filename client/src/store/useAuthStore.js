@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import axiosInstance from "../utils/axiosInstance";
 
 const useAuthStore = create((set) => ({
     user: null,
@@ -9,8 +10,14 @@ const useAuthStore = create((set) => ({
         try {
             set({ isCheckingAuth: true });
 
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            const response = await axiosInstance.get("/auth/profile");
+            if (response.status === 200) {
+                set({ user: response.data });
+            } else {
+                set({ user: null });
+            }
         } catch (error) {
+            set({ user: null });
         } finally {
             set({ isCheckingAuth: false });
         }

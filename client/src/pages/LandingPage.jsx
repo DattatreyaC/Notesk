@@ -8,7 +8,7 @@ const LandingPage = () => {
     return (
         <main className="bg flex h-screen w-full bg-white/10">
             {/* Left Side - Text Content */}
-            <section className="flex flex-col gap-6 items-start justify-center pl-10 w-1/2">
+            <section className="flex flex-col gap-6 items-start justify-center px-20 w-1/2">
                 <div>
                     <h1 className="text-5xl font-bold">
                         Manage your notes & tasks
@@ -27,23 +27,27 @@ const LandingPage = () => {
                     {/* Sign Up */}
                     <div className="w-max h-max group relative">
                         <Link
-                            to={"/signup"}
-                            className="border border-black block text-lg bg-black text-white hover:bg-white hover:text-black py-2 px-5 z-40"
+                            to="/auth"
+                            className="relative block text-lg border-2  border-black bg-black text-white py-2 px-5 z-10 overflow-hidden transition-colors duration-200 rounded"
                         >
-                            Get Started
+                            <span className="relative z-10 group-hover:text-black duration-200">
+                                Get Started
+                            </span>
+                            <span className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-200 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-200 z-0 "></span>
                         </Link>
-                        <div className="bg-black w-full h-full absolute left-0 top-0 group-hover:translate-y-1 group-hover:translate-x-1 transition-transform duration-150 z-[-1]" />
                     </div>
 
                     {/* Login */}
                     <div className="w-max h-max group relative">
                         <Link
-                            to={"/login"}
-                            className="border border-black block text-lg bg-white text-black hover:bg-black hover:text-white py-2 px-5 z-40"
+                            to="/auth"
+                            className="relative block text-lg border-2 border-black bg-white text-black py-2 px-5 z-10 overflow-hidden transition-colors duration-200 rounded"
                         >
-                            Login
+                            <span className="relative z-10 group-hover:text-white duration-200">
+                                Login
+                            </span>
+                            <span className="absolute inset-0 bg-gradient-to-l from-black to-black/80 translate-x-full group-hover:translate-x-0 transition-transform duration-200 z-0 "></span>
                         </Link>
-                        <div className="bg-black w-full h-full absolute left-0 top-0 group-hover:translate-y-1 group-hover:translate-x-1 transition-transform duration-150 z-[-1]" />
                     </div>
                 </div>
             </section>

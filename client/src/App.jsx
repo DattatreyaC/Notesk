@@ -4,6 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Dashboard from "./pages/Dashboard";
 import Sidebar from "./components/Sidebar";
+import AuthPage from "./pages/AuthPage.jsx";
 import useAuthStore from "./store/useAuthStore";
 
 const App = () => {
@@ -24,7 +25,14 @@ const App = () => {
 
             <Routes>
                 <Route path="/" element={<LandingPage />}></Route>
-                <Route path="/dashboard" element={<Dashboard />}></Route>
+                <Route
+                    path="/auth"
+                    element={!user ? <AuthPage /> : <Dashboard />}
+                ></Route>
+                <Route
+                    path="/dashboard"
+                    element={user ? <Dashboard /> : <LandingPage />}
+                ></Route>
 
                 <Route path="*" element={<NotFoundPage />}></Route>
             </Routes>
