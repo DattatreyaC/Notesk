@@ -17,7 +17,6 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-
         const user = await User.create({
             firstname,
             lastname,
@@ -117,5 +116,13 @@ export const getAllProfiles = async (req, res) => {
     } catch (error) {
         console.log(`Error in getAllProfiles controller : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const checkAuth = async (req, res) => {
+    try {
+        res.status(200).json(req.user);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
     }
 };

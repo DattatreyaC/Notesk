@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    checkAuth,
     deleteProfile,
     getAllProfiles,
     login,
@@ -28,5 +29,8 @@ router.delete("/delete", isLoggedIn, deleteProfile);
 
 //get all profiles
 router.get("/profiles", getAllProfiles);
+
+//get auth / check auth
+router.get("/profile", isLoggedIn, checkAuth);
 
 export default router;

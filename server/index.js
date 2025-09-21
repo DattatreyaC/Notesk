@@ -12,7 +12,12 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
-app.use(cors());
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -21,7 +26,7 @@ connectToDb();
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/note", noteRoutes);
-app.use("/api/posts",postRoutes);
+app.use("/api/posts", postRoutes);
 
 app.listen(port, () => {
     console.log(`App started on port ${port} : http://localhost:${port}`);
