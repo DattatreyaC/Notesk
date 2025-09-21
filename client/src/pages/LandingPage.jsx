@@ -1,7 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import useAuthStore from "../store/useAuthStore";
 
 const LandingPage = () => {
+    const { user } = useAuthStore();
+
     return (
         <main className="bg flex h-screen w-full bg-white/10">
             {/* Left Side - Text Content */}
