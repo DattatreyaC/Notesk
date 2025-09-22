@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import useAuthStore from "../../store/useAuthStore";
 
 const LoginComponent = () => {
+    const { login, isAuthLoading } = useAuthStore();
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -23,7 +26,7 @@ const LoginComponent = () => {
         if (!formData.password) {
             newErrors.password = "Password is required.";
         } else if (formData.password.length < 6) {
-            newErrors.password = "Password must be at least 8 characters.";
+            newErrors.password = "Password must be at least 6 characters.";
         }
 
         setErrors(newErrors);
@@ -36,7 +39,7 @@ const LoginComponent = () => {
         e.preventDefault();
         const isValid = validateForm();
         if (isValid) {
-            console.log(formData);
+            login(formData);
         }
     };
 
@@ -86,6 +89,7 @@ const LoginComponent = () => {
                 <div className="w-full pt-5">
                     <button
                         type="submit"
+                        disabled={isAuthLoading}
                         className="group relative z-0 w-full cursor-pointer overflow-hidden rounded border-2 hover:border-black/60 p-2.5 transition-colors duration-200"
                     >
                         <span className="relative z-10 text-black font-semibold transition-colors duration-300 group-hover:text-white">

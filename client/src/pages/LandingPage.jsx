@@ -31,24 +31,26 @@ const LandingPage = () => {
                             className="relative block text-lg border-2  border-black bg-black text-white py-2 px-5 z-10 overflow-hidden transition-colors duration-200 rounded"
                         >
                             <span className="relative z-10 group-hover:text-black duration-200">
-                                Get Started
+                                {user ? "Go to Dashboard" : "Get Started"}
                             </span>
                             <span className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-200 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-200 z-0 "></span>
                         </Link>
                     </div>
 
                     {/* Login */}
-                    <div className="w-max h-max group relative">
-                        <Link
-                            to="/auth"
-                            className="relative block text-lg border-2 border-black bg-white text-black py-2 px-5 z-10 overflow-hidden transition-colors duration-200 rounded"
-                        >
-                            <span className="relative z-10 group-hover:text-white duration-200">
-                                Login
-                            </span>
-                            <span className="absolute inset-0 bg-gradient-to-l from-black to-black/80 translate-x-full group-hover:translate-x-0 transition-transform duration-200 z-0 "></span>
-                        </Link>
-                    </div>
+                    {!user && (
+                        <div className="w-max h-max group relative">
+                            <Link
+                                to="/auth"
+                                className="relative block text-lg border-2 border-black bg-white text-black py-2 px-5 z-10 overflow-hidden transition-colors duration-200 rounded"
+                            >
+                                <span className="relative z-10 group-hover:text-white duration-200">
+                                    Login
+                                </span>
+                                <span className="absolute inset-0 bg-gradient-to-l from-black to-black/80 translate-x-full group-hover:translate-x-0 transition-transform duration-200 z-0 "></span>
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </section>
 

@@ -18,7 +18,7 @@ const Dashboard = () => {
     return (
         <section className="bg w-full min-h-screen flex flex-col pl-12 p-3">
             {/* Page Title */}
-            <h1 className="text-black font-bold underline text-4xl text-center mb-4">
+            <h1 className="text-black font-bold text-4xl text-center mb-4">
                 DASHBOARD
             </h1>
 

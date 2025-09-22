@@ -3,7 +3,7 @@ import LoginComponent from "../components/auth-components/LoginComponent";
 import RegisterComponent from "../components/auth-components/RegisterComponent";
 
 const AuthPage = () => {
-    const [choice, setChoice] = useState("login");
+    const [choice, setChoice] = useState("register");
 
     const handleAuthMode = (mode) => {
         setChoice(mode);
@@ -24,7 +24,7 @@ const AuthPage = () => {
                             }`}
                         >
                             <button
-                                className={`rounded border w-full cursor-pointer p-3 font-semibold ${
+                                className={` border w-full cursor-pointer p-3 font-semibold ${
                                     choice === "register"
                                         ? "bg-black text-white hover:text-white hover:bg-black border-black"
                                         : "text-black/60 hover:text-black hover:bg-black/8 border-black/50 hover:border-black"
@@ -43,7 +43,7 @@ const AuthPage = () => {
                             }`}
                         >
                             <button
-                                className={`rounded border w-full cursor-pointer p-3 font-semibold ${
+                                className={` border w-full cursor-pointer p-3 font-semibold ${
                                     choice === "login"
                                         ? "bg-black text-white hover:text-white hover:bg-black border-black"
                                         : "text-black/60 hover:text-black hover:bg-black/8 border-black/50 hover:border-black"

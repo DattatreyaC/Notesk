@@ -1,4 +1,5 @@
 import {
+    CircleUserRound,
     LayoutDashboard,
     ListTodo,
     NotebookPen,
@@ -11,8 +12,11 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import useAuthStore from "../store/useAuthStore.js";
 
 const Sidebar = () => {
+    const { user } = useAuthStore();
+
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
@@ -23,7 +27,7 @@ const Sidebar = () => {
                 sidebarOpen
                     ? "w-[50%] sm:w-[40%] md:w-[25%] lg:w-[18%]"
                     : "w-11"
-            }  border bg-black transition-all duration-300 ease-out fixed flex flex-col px-1 shadow-[0_0_5px_black]`}
+            }  border bg-black transition-all duration-300 ease-out fixed flex flex-col px-1 shadow-[0_0_10px_black] z-40`}
         >
             <div
                 className={`hover:bg-white/30 absolute top-2 rounded-sm p-[3px] ${
@@ -46,7 +50,18 @@ const Sidebar = () => {
             </div>
 
             {/* SIDEBAR MENU */}
-            <div className="flex flex-col gap-3 mt-20">
+            <div className="flex flex-col gap-3 mt-20  border-white">
+                <div className="w-full  border-white text-white flex items-center gap-3 border-b">
+                    <CircleUserRound size={50} strokeWidth={1.5} />
+                    <span
+                        className={`${
+                            sidebarOpen ? "opacity-100" : "opacity-0 absolute"
+                        } duration-200 transition-all text-2xl`}
+                    >
+                        {user.firstname}
+                    </span>
+                </div>
+
                 <Link
                     to={"/dashboard"}
                     className={`flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2 `}

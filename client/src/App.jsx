@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Dashboard from "./pages/Dashboard";
@@ -14,7 +14,7 @@ const App = () => {
         checkAuth();
     }, []);
 
-    if (isCheckingAuth) {
+    if (isCheckingAuth && !user) {
         console.log(`working`);
         return <p>Loading</p>;
     }
@@ -25,9 +25,12 @@ const App = () => {
 
             <Routes>
                 <Route path="/" element={<LandingPage />}></Route>
+
                 <Route
                     path="/auth"
-                    element={!user ? <AuthPage /> : <Dashboard />}
+                    element={
+                        !user ? <AuthPage /> : <Navigate to={"/dashboard"} />
+                    }
                 ></Route>
                 <Route
                     path="/dashboard"

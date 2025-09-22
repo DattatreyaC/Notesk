@@ -36,11 +36,11 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const { username, password } = req.body;
-        if (!username || !password) {
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(400).json({ message: "Fill all fields" });
         }
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ email });
 
         if (!user) {
             return res.status(400).json({ message: "Invalid Credentials" });
@@ -51,7 +51,7 @@ export const login = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(400).json({ message: "Invalid Credentials" });
         }
-        generateToken(user, res);
+        generateToken(user._id, res);
         return res.status(200).json(user);
     } catch (error) {
         console.log(`Error in login controller : ${error}`);

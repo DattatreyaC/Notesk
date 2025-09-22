@@ -23,9 +23,41 @@ const useAuthStore = create((set) => ({
         }
     },
 
-    login: () => {},
+    login: async (payload) => {
+        try {
+            set({ isAuthLoading: true });
 
-    register: () => {},
+            const response = await axiosInstance.post("/auth/login", payload, {
+                withCredentials: true,
+            });
+            if (response) {
+                set({ user: response.data });
+            }
+        } catch (error) {
+            set({ user: null });
+        } finally {
+            set({ isAuthLoading: false });
+        }
+    },
+
+    register: async (payload) => {
+        try {
+            set({ isAuthLoading: true });
+
+            const response = await axiosInstance.post(
+                "/auth/register",
+                payload,
+                { withCredentials: true },
+            );
+            if (response) {
+                set({ user: response.data });
+            }
+        } catch (error) {
+            set({ user: null });
+        } finally {
+            set({ isAuthLoading: false });
+        }
+    },
 
     logout: () => {},
 
