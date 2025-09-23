@@ -1,19 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
+import useAuthStore from "../store/useAuthStore";
+import useDashboardStore from "../store/useDashboardStore";
+import DashboardNoteCard from "../components/dashboard-components/dashboardNoteCard";
+import { Plus } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
-    const user = {
-        starredPosts: [],
-        tasks: [],
-        _id: "687aa106b7b594093b35e784",
-        firstname: "rahul",
-        lastname: "das",
-        username: "rad",
-        requestsReceived: [],
-        requestsSent: [],
-        friends: ["687aa276b7b594093b35e78f"],
-        notes: ["687b299dfb7149b12a05b5ac"],
-        posts: [],
-    };
+    const { user } = useAuthStore();
+    const {
+        fetchDashboardData,
+        dashboardNotes,
+        dashboardTasks,
+        dashboardPosts,
+        dashboardStarredPosts,
+    } = useDashboardStore();
+
+    useEffect(() => {
+        fetchDashboardData();
+    }, []);
 
     return (
         <section className="bg w-full min-h-screen flex flex-col pl-12 p-3">
@@ -23,21 +27,43 @@ const Dashboard = () => {
             </h1>
 
             {/* Card Grid - fills remaining space */}
-            <main className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <main className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full auto-rows-fr">
                 {/* Notes */}
-                <div className="border rounded-lg shadow-md flex flex-col h-full overflow-hidden">
+                <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative bg-yellow-50">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
                         Notes ({user.notes.length})
                     </h2>
-                    <div className="flex-1 flex items-center justify-center text-gray-500">
-                        {user.notes.length === 0
+                    <div className="flex flex-col items-start text-gray-500 p-2 ">
+                        {dashboardNotes === 0
                             ? "Start writing notes to see them here..."
-                            : ""}
+                            : dashboardNotes.map((note) => {
+                                  return (
+                                      <DashboardNoteCard
+                                          key={note._id}
+                                          note={note}
+                                      />
+                                  );
+                              })}
+                    </div>
+
+                    <div className="absolute bottom-0.5 right-1 flex items-center justify-center gap-2 p-1">
+                        {user.notes.length > 3 && (
+                            <Link
+                                to={"/notes"}
+                                className="bg-black hover:bg-slate-900 duration-200 text-white p-1.5 rounded cursor-pointer"
+                            >
+                                View More
+                            </Link>
+                        )}
+
+                        <button className="border p-1 bg-black rounded">
+                            <Plus className="text-white" />
+                        </button>
                     </div>
                 </div>
 
                 {/* Tasks */}
-                <div className="border rounded-lg shadow-md flex flex-col h-full overflow-hidden">
+                <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
                         Tasks ({user.tasks.length})
                     </h2>
@@ -49,7 +75,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Posts */}
-                <div className="border rounded-lg shadow-md flex flex-col h-full overflow-hidden">
+                <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
                         Posts ({user.posts.length})
                     </h2>
@@ -61,7 +87,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Starred Posts */}
-                <div className="border rounded-lg shadow-md flex flex-col h-full overflow-hidden">
+                <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
                         Starred Posts ({user.starredPosts.length})
                     </h2>

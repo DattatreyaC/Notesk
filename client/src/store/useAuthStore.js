@@ -59,7 +59,31 @@ const useAuthStore = create((set) => ({
         }
     },
 
-    logout: () => {},
+    logout: async () => {
+        try {
+            set({ isAuthLoading: true });
+
+            const response = await axiosInstance.post("/auth/logout");
+            if (response.status === 200) {
+                set({ user: null });
+            }
+        } catch (error) {
+            toast.error("Server error. Please try again", {
+                style: {
+                    border: "1px solid red",
+                    padding: "12px",
+                    color: "white",
+                    background: "rgba(100,0,0,0.8)",
+                },
+                iconTheme: {
+                    primary: "white",
+                    secondary: "red",
+                },
+            });
+        } finally {
+            set({ isAuthLoading: false });
+        }
+    },
 
     deleteAccount: () => {},
 }));

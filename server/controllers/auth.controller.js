@@ -121,7 +121,22 @@ export const getAllProfiles = async (req, res) => {
 
 export const checkAuth = async (req, res) => {
     try {
-        res.status(200).json(req.user);
+        const user = req.user;
+
+        const userDocument = {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            username: user.username,
+            email: user.email,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+            notes: user.notes,
+            posts: user.posts,
+            tasks: user.tasks,
+            friends: user.friends,
+            starredPosts: user.starredPosts,
+        };
+        res.status(200).json(userDocument);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
