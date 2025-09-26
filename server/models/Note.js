@@ -16,6 +16,11 @@ const noteSchema = new mongoose.Schema(
             default: false,
         },
 
+        isPinned: {
+            type: Boolean,
+            default: false,
+        },
+
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -30,7 +35,7 @@ const noteSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
-    }
+    },
 );
 
 const Note = mongoose.model("Note", noteSchema);

@@ -33,13 +33,16 @@ export const createNote = async (req, res) => {
 export const editNote = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, content } = req.body;
+        const { title, content, isPublic, isPinned, tags } = req.body;
 
         const updatedNote = await Note.findByIdAndUpdate(
             id,
             {
                 title,
                 content,
+                isPublic,
+                isPinned,
+                tags,
             },
             { new: true },
         );
@@ -76,7 +79,9 @@ export const deleteNote = async (req, res) => {
 
 export const getMyNotes = async (req, res) => {
     try {
-        const notes = await Note.find({ user: req.user._id });
+        const notes = await Note.find({ user: req.user._id }).sort({
+            createdAt: -1,
+        });
 
         if (notes) {
             res.status(200).json(notes);
