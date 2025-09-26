@@ -9,6 +9,7 @@ import AuthPage from "./pages/AuthPage.jsx";
 import useAuthStore from "./store/useAuthStore";
 import useModalStore from "./store/useModalStore.js";
 import ConfirmationModal from "./components/modals/ConfirmationModal.jsx";
+import NotesPage from "./pages/NotesPage.jsx";
 
 const App = () => {
     const { user, checkAuth, isCheckingAuth } = useAuthStore();
@@ -39,6 +40,10 @@ const App = () => {
                 <Route
                     path="/dashboard"
                     element={user ? <Dashboard /> : <LandingPage />}
+                ></Route>
+                <Route
+                    path="/notes"
+                    element={user ? <NotesPage /> : <LandingPage />}
                 ></Route>
 
                 <Route path="*" element={<NotFoundPage />}></Route>

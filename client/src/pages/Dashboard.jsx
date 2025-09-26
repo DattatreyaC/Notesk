@@ -7,13 +7,7 @@ import { Link } from "react-router-dom";
 
 const Dashboard = () => {
     const { user } = useAuthStore();
-    const {
-        fetchDashboardData,
-        dashboardNotes,
-        dashboardTasks,
-        dashboardPosts,
-        dashboardStarredPosts,
-    } = useDashboardStore();
+    const { fetchDashboardData, dashboardNotes } = useDashboardStore();
 
     useEffect(() => {
         fetchDashboardData();
@@ -46,7 +40,7 @@ const Dashboard = () => {
                               })}
                     </div>
 
-                    <div className="absolute bottom-0.5 right-1 flex items-center justify-center gap-2 p-1">
+                    <div className="absolute bottom-0 right-0  flex items-center justify-center gap-2 p-1">
                         {user.notes.length > 3 && (
                             <Link
                                 to={"/notes"}
