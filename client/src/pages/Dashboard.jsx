@@ -14,14 +14,14 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <section className="bg w-full min-h-screen flex flex-col pl-12 p-3">
+        <section className="bg w-full min-h-screen flex flex-col pl-12 p-3 place-items-center">
             {/* Page Title */}
             <h1 className="text-black font-bold text-4xl text-center mb-4">
                 DASHBOARD
             </h1>
 
             {/* Card Grid - fills remaining space */}
-            <main className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full auto-rows-fr">
+            <main className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full auto-rows-fr w-full max-w-7xl">
                 {/* Notes */}
                 <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative bg-yellow-50">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">

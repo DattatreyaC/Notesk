@@ -3,7 +3,7 @@ import User from "../models/User.js";
 
 export const createNote = async (req, res) => {
     try {
-        const { title, content } = req.body;
+        const { title, content, isPublic } = req.body;
 
         if (!title || !content) {
             return res.status(400).json({ message: "Fill all fields" });
@@ -12,6 +12,7 @@ export const createNote = async (req, res) => {
         const createdNote = await Note.create({
             title,
             content,
+            isPublic,
             user: req.user._id,
         });
 

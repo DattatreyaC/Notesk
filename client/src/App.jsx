@@ -10,6 +10,7 @@ import useAuthStore from "./store/useAuthStore";
 import useModalStore from "./store/useModalStore.js";
 import ConfirmationModal from "./components/modals/ConfirmationModal.jsx";
 import NotesPage from "./pages/NotesPage.jsx";
+import Loader from "./components/Loader.jsx";
 
 const App = () => {
     const { user, checkAuth, isCheckingAuth } = useAuthStore();
@@ -21,7 +22,7 @@ const App = () => {
     }, []);
 
     if (isCheckingAuth && !user) {
-        return <p>Loading</p>;
+        return <Loader />;
     }
 
     return (

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useAuthStore from "../../store/useAuthStore";
+import Loader from "../Loader";
 
 const LoginComponent = () => {
     const { login, isAuthLoading } = useAuthStore();
@@ -86,15 +87,23 @@ const LoginComponent = () => {
                     )}
                 </div>
 
-                <div className="w-full pt-5">
+                <div className="w-full h-fit pt-5">
                     <button
                         type="submit"
                         disabled={isAuthLoading}
                         className="group relative z-0 w-full cursor-pointer overflow-hidden rounded border-2 hover:border-black/60 p-2.5 transition-colors duration-200"
                     >
-                        <span className="relative z-10 text-black font-semibold transition-colors duration-300 group-hover:text-white">
-                            Login to your account
-                        </span>
+                        <div className="relative z-10 text-black font-semibold transition-colors duration-300 group-hover:text-white flex items-center justify-center gap-1">
+                            {isAuthLoading
+                                ? "Logging in"
+                                : "Login to your account"}
+
+                            {isAuthLoading && (
+                                <div className=" h-fit">
+                                    <Loader />
+                                </div>
+                            )}
+                        </div>
                         <span className="absolute inset-0 z-0 -translate-x-full transform bg-gradient-to-r from-black via-black to-transparent transition-transform duration-200 group-hover:translate-x-0"></span>
                     </button>
                 </div>
