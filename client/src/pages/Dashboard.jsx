@@ -10,6 +10,7 @@ const Dashboard = () => {
     const { fetchDashboardData, dashboardNotes } = useDashboardStore();
 
     useEffect(() => {
+        document.title = "Dashboard";
         fetchDashboardData();
     }, []);
 

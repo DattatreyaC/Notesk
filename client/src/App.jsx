@@ -11,6 +11,9 @@ import useModalStore from "./store/useModalStore.js";
 import ConfirmationModal from "./components/modals/ConfirmationModal.jsx";
 import NotesPage from "./pages/NotesPage.jsx";
 import Loader from "./components/Loader.jsx";
+import PostsPage from "./pages/PostsPage.jsx";
+import FriendsPage from "./pages/FriendsPage.jsx";
+import useFriendsStore from "./store/useFriendsStore.js";
 
 const App = () => {
     const { user, checkAuth, isCheckingAuth } = useAuthStore();
@@ -45,6 +48,14 @@ const App = () => {
                 <Route
                     path="/notes"
                     element={user ? <NotesPage /> : <LandingPage />}
+                ></Route>
+                <Route
+                    path="/posts"
+                    element={user ? <PostsPage /> : <LandingPage />}
+                ></Route>
+                <Route
+                    path="/friends"
+                    element={user ? <FriendsPage /> : <LandingPage />}
                 ></Route>
 
                 <Route path="*" element={<NotFoundPage />}></Route>

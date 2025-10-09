@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useAuthStore from "../../store/useAuthStore";
 
 const RegisterComponent = () => {
     const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const RegisterComponent = () => {
     });
 
     const [errors, setErrors] = useState({});
+    const { register } = useAuthStore();
 
     const validateForm = () => {
         const newErrors = {};
@@ -54,7 +56,7 @@ const RegisterComponent = () => {
         e.preventDefault();
         const isValid = validateForm();
         if (isValid) {
-            console.log(formData);
+            register(formData);
         }
     };
 

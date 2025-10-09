@@ -6,7 +6,7 @@ export const getOtherUsers = async (req, res) => {
             _id: {
                 $ne: req.user._id,
             },
-        });
+        }).select("-password -requestsReceived -requestsSent -notes");
 
         return res.status(200).json(otherUsers);
     } catch (error) {
@@ -17,7 +17,11 @@ export const getOtherUsers = async (req, res) => {
 
 export const getProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).populate("notes").populate("friends").populate("requestsReceived").populate("requestsSent");
+        const user = await User.findById(req.user._id)
+            .populate("notes")
+            .populate("friends")
+            .populate("requestsReceived")
+            .populate("requestsSent");
         if (user) {
             return res.status(200).json(user);
         }
@@ -48,12 +52,16 @@ export const sendFriendRequest = async (req, res) => {
         const senderId = req.user._id;
         const receiverId = req.params.id;
 
-        if(senderId.toString() === receiverId.toString()){
-            return res.status(400).json({ message: "You can't send request to yourself" });
+        if (senderId.toString() === receiverId.toString()) {
+            return res
+                .status(400)
+                .json({ message: "You can't send request to yourself" });
         }
 
-        if(req.user.friends.includes(receiverId)){
-            return res.status(400).json({ message: "You are already friends with this user" });
+        if (req.user.friends.includes(receiverId)) {
+            return res
+                .status(400)
+                .json({ message: "You are already friends with this user" });
         }
 
         const sender = await User.findByIdAndUpdate(senderId, {
@@ -78,95 +86,109 @@ export const sendFriendRequest = async (req, res) => {
 };
 
 export const acceptFriendRequest = async (req, res) => {
-    try{
+    try {
         const senderId = req.params.id;
 
         const requests = req.user.requestsReceived;
-        if(!requests.includes(senderId)){
+        if (!requests.includes(senderId)) {
             return res.status(404).json({ message: "Request not found" });
         }
 
-        const updatedUser = await User.findByIdAndUpdate(req.user._id,{
-            $push :{
+        const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+            $push: {
                 friends: senderId,
             },
-            $pull:{
+            $pull: {
                 requestsReceived: senderId,
             },
-        })
+        });
 
-        const updatedUser2 = await User.findByIdAndUpdate(senderId,{
-            $push :{
+        const updatedUser2 = await User.findByIdAndUpdate(senderId, {
+            $push: {
                 friends: req.user._id,
             },
-            $pull:{
+            $pull: {
                 requestsSent: req.user._id,
             },
-        })
+        });
 
-        if(updatedUser && updatedUser2){
+        if (updatedUser && updatedUser2) {
             return res.status(200).json({ message: "Friend Request Accepted" });
         }
-
-    }catch(error){
+    } catch (error) {
         console.log(`Error in acceptFriendRequest controller : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
 
 export const declineFriendRequest = async (req, res) => {
-    try{
+    try {
         const userId = req.params.id;
         const requests = req.user.requestsReceived;
 
-        if(!requests.includes(userId)){
+        if (!requests.includes(userId)) {
             return res.status(404).json({ message: "Request not found" });
         }
 
-        const updatedUser = await User.findByIdAndUpdate(req.user._id,{
-            $pull:{
-                requestsReceived:userId,
-            }
-        })
+        const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+            $pull: {
+                requestsReceived: userId,
+            },
+        });
 
         const updatedUser2 = await User.findByIdAndUpdate(userId, {
-            $pull:{
+            $pull: {
                 requestsSent: req.user._id,
-            }
-        })
+            },
+        });
 
-        if(updatedUser && updatedUser2){
+        if (updatedUser && updatedUser2) {
             return res.status(200).json({ message: "Friend Request Declined" });
         }
-    }catch (error) {
+    } catch (error) {
         console.log(`Error in declineFriendRequest controller : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 export const removeFriend = async (req, res) => {
-    try{
+    try {
         const friendId = req.params.id;
-        if(!req.user.friends.includes(friendId)){
+        if (!req.user.friends.includes(friendId)) {
             return res.status(404).json({ message: "Friend not found" });
         }
-        const updatedUser = await User.findByIdAndUpdate(req.user._id,{
-            $pull:{
+        const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+            $pull: {
                 friends: friendId,
             },
-        })
-        const updatedUser2 = await User.findByIdAndUpdate(friendId,{
-            $pull:{
+        });
+        const updatedUser2 = await User.findByIdAndUpdate(friendId, {
+            $pull: {
                 friends: req.user._id,
             },
-        })
+        });
 
-        if(updatedUser && updatedUser2){
+        if (updatedUser && updatedUser2) {
             return res.status(200).json({ message: "Friend Removed" });
         }
-
-    }catch (error) {
+    } catch (error) {
         console.log(`Error in removeFriend controller : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
     }
-}
+};
+
+export const searchUsers = async (req, res) => {
+    try {
+        const { searchValue } = req.params;
+
+        const searchedUsers = await User.find({
+            username: { $regex: searchValue, $options: "i" },
+            _id: { $ne: req.user._id },
+        }).select("-password");
+
+        return res.status(200).json(searchedUsers);
+    } catch (error) {
+        console.log(`Error in searchUsers controller : ${error}`);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

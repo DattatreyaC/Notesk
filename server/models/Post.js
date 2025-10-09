@@ -12,7 +12,7 @@ const postSchema = new mongoose.Schema(
         },
         isPublic: {
             type: Boolean,
-            default: false,
+            default: true,
         },
         user: {
             type: mongoose.Schema.Types.ObjectId,
@@ -40,7 +40,7 @@ const postSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
-    }
+    },
 );
 
 const Post = mongoose.model("Post", postSchema);

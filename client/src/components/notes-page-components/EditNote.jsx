@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import useNoteStore from "../../store/useNoteStore";
 import Loader from "../Loader";
 
-const CreateNote = ({ isCreateOpen, setIsCreateOpen }) => {
-    const { createNote, isNotesLoading } = useNoteStore();
+const CreateNote = ({ isEditOpen, setIsEditOpen, note }) => {
+    const { editNote, isNotesLoading } = useNoteStore();
 
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [isPublic, setIsPublic] = useState(false);
+    const [title, setTitle] = useState(note.title);
+    const [content, setContent] = useState(note.content);
+    const [isPublic, setIsPublic] = useState(note.isPublic);
 
     const validateForm = () => {
         if (!title || !content) {
@@ -26,38 +26,42 @@ const CreateNote = ({ isCreateOpen, setIsCreateOpen }) => {
                 content,
                 isPublic,
             };
-            createNote(payload);
 
-            setTitle("");
-            setContent("");
-            setIsPublic(false);
+            editNote(note._id, payload);
 
-            if (!isNotesLoading) setIsCreateOpen(false);
+            if (!isNotesLoading) setIsEditOpen(false);
         }
+    };
+
+    const resetValues = () => {
+        setTitle(note.title);
+        setContent(note.content);
+        setIsPublic(note.isPublic);
     };
 
     return (
         // Overlay (only visible when open)
         <div
-            className={`fixed inset-0 flex items-center justify-center bg-black/80 transition-opacity duration-300 z-50 ${
-                isCreateOpen ? "opacity-100 visible" : "opacity-0 invisible"
+            className={`fixed inset-0 flex items-center justify-center bg-black/70 transition-opacity duration-300 z-50 ${
+                isEditOpen ? "opacity-100 visible" : "opacity-0 invisible"
             }`}
         >
             {/* Modal container */}
             <div
-                className={`flex flex-col bg-neutral-300  w-full max-w-xl h-[70vh] rounded-md overflow-hidden transform transition-transform duration-300 border ${
-                    isCreateOpen ? "translate-y-0" : "translate-y-full"
-                }`}
+                className={`flex flex-col w-full max-w-xl h-[70vh] rounded-lg overflow-hidden transform transition-transform duration-300 border border-black/30 shadow-2xl ${
+                    isEditOpen ? "translate-y-0" : "translate-y-full"
+                } bg-neutral-200`}
             >
                 {/* Header */}
-                <header className="flex items-center justify-between px-5 py-4 bg-black">
-                    <h1 className="text-2xl font-semibold text-white">
-                        Create a Note
-                    </h1>
+                <header className="flex items-center justify-between px-5 py-4 bg-black text-white rounded-t-lg">
+                    <h1 className="text-2xl font-semibold">Edit Note</h1>
                     <button
                         type="button"
-                        onClick={() => setIsCreateOpen(false)}
-                        className="p-1 rounded border border-white/40 text-white hover:bg-white hover:text-black duration-200"
+                        onClick={() => {
+                            resetValues();
+                            setIsEditOpen(false);
+                        }}
+                        className="p-1 rounded border border-white/40 hover:bg-white hover:text-black duration-200"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -69,12 +73,12 @@ const CreateNote = ({ isCreateOpen, setIsCreateOpen }) => {
                     className="flex flex-col flex-grow"
                 >
                     {/* Title Input */}
-                    <div className="border-b border-stone-600">
+                    <div className="border-b border-black/20">
                         <input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            className="w-full bg-transparent text-2xl text-black p-4 focus:outline-none"
+                            className="w-full bg-neutral-300 text-xl text-black p-4 focus:outline-none"
                             placeholder="Input Title Here"
                         />
                     </div>
@@ -84,13 +88,13 @@ const CreateNote = ({ isCreateOpen, setIsCreateOpen }) => {
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="Enter the contents of your note..."
-                        className="flex-grow bg-transparent text-black resize-none p-4 focus:outline-none"
+                        className="flex-grow bg-neutral-300 text-black resize-none p-4 focus:outline-none"
                     ></textarea>
 
                     {/* Footer Actions */}
-                    <div className="flex items-center justify-between px-5 py-3 bg-black border-t border-stone-600">
+                    <div className="flex items-center justify-between px-5 py-3 bg-black text-white rounded-b-lg">
                         {/* Visibility option */}
-                        <label className="flex items-center gap-2 text-white cursor-pointer select-none">
+                        <label className="flex items-center gap-2 cursor-pointer select-none">
                             <input
                                 type="checkbox"
                                 checked={isPublic}
@@ -101,7 +105,7 @@ const CreateNote = ({ isCreateOpen, setIsCreateOpen }) => {
                         </label>
 
                         {/* Buttons */}
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-5">
                             <button
                                 type="submit"
                                 className="text-green-600 bg-green-700/20 hover:bg-green-600 hover:text-black border border-green-600/30 duration-200 p-1.5 rounded flex gap-2"
@@ -113,7 +117,10 @@ const CreateNote = ({ isCreateOpen, setIsCreateOpen }) => {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => setIsCreateOpen(false)}
+                                onClick={() => {
+                                    resetValues();
+                                    setIsEditOpen(false);
+                                }}
                                 className="text-red-600 bg-red-600/10 hover:bg-red-600 hover:text-white border border-red-500/30 duration-200 p-1.5 rounded"
                             >
                                 Cancel

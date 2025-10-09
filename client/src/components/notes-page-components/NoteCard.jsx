@@ -1,15 +1,25 @@
 import { Edit2, Globe, GlobeLock, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { MdOutlinePushPin } from "react-icons/md";
 import { MdPushPin } from "react-icons/md";
 import useNoteStore from "../../store/useNoteStore";
+import EditNote from "../notes-page-components/EditNote.jsx";
 
 const NoteCard = ({ note }) => {
-    const { deleteNote, isNotesLoading } = useNoteStore();
+    const { deleteNote, pinNote, unpinNote, isNotesLoading } = useNoteStore();
+
+    const [isEditOpen, setIsEditOpen] = useState(false);
 
     const convertDate = () => {
         const date = new Date(note.createdAt);
         return date.toDateString();
+    };
+
+    const handlePin = (id) => {
+        pinNote(id);
+    };
+    const handleUnpin = (id) => {
+        unpinNote(id);
     };
 
     const handleDelete = (id) => {
@@ -18,7 +28,7 @@ const NoteCard = ({ note }) => {
 
     return (
         <div
-            className={`w-xs h-fit rounded-md overflow-hidden bg-black text-white p-1 group ${
+            className={`w-xs sm:w-[18rem] md:w-[20rem] h-fit rounded-md overflow-hidden bg-black text-white p-1 group ${
                 note.isPinned
                     ? "outline-2 outline-offset-2 outline-black"
                     : "shadow-[3px_3px_7px_black]"
@@ -28,7 +38,14 @@ const NoteCard = ({ note }) => {
             <div className="w-full font-semibold text-xl p-1.5 pb-0 relative flex items-center">
                 {note.title}
 
-                <span className="absolute w-fit h-fit right-3 cursor-pointer rounded overflow-hidden rotate-45 text-xl">
+                <span
+                    onClick={() => {
+                        note.isPinned
+                            ? handleUnpin(note._id)
+                            : handlePin(note._id);
+                    }}
+                    className="absolute w-fit h-fit right-3 cursor-pointer rounded overflow-hidden rotate-45 text-xl"
+                >
                     {note.isPinned ? (
                         <MdPushPin className="rounded-full" />
                     ) : (
@@ -51,7 +68,10 @@ const NoteCard = ({ note }) => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <button className="bg-blue-400/20 border border-blue-400/30 p-1.5 rounded-full hover:bg-blue-400/30 duration-200">
+                    <button
+                        onClick={() => setIsEditOpen(true)}
+                        className="bg-blue-400/20 border border-blue-400/30 p-1.5 rounded-full hover:bg-blue-400/30 duration-200"
+                    >
                         <Edit2 size={15} className="text-blue-300" />
                     </button>
 
@@ -63,6 +83,12 @@ const NoteCard = ({ note }) => {
                     </button>
                 </div>
             </div>
+
+            <EditNote
+                isEditOpen={isEditOpen}
+                setIsEditOpen={setIsEditOpen}
+                note={note}
+            />
         </div>
     );
 };

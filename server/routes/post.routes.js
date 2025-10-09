@@ -19,7 +19,7 @@ import isLoggedIn from "../middlewares/isLoggedIn.js";
 const router = express.Router();
 
 router.post("/createPost", isLoggedIn, createPost);
-router.post("/editPost/:id", isLoggedIn, editPost);
+router.put("/editPost/:id", isLoggedIn, editPost);
 router.delete("/deletePost/:id", isLoggedIn, deletePost);
 
 router.get("/myPosts", isLoggedIn, getMyPosts);

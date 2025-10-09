@@ -20,17 +20,18 @@ export const createPost = async (req, res) => {
 
 export const editPost = async (req, res) => {
     try {
-        const { title, content } = req.body;
+        const { title, content, isPublic } = req.body;
         const id = req.params.id;
         const updatedPost = await Post.findByIdAndUpdate(
             id,
             {
                 title,
                 content,
+                isPublic,
             },
             {
                 new: true,
-            }
+            },
         );
         if (updatedPost) {
             return res.status(200).json(updatedPost);
@@ -60,7 +61,10 @@ export const deletePost = async (req, res) => {
 
 export const getMyPosts = async (req, res) => {
     try {
-        const myPosts = await Post.find({ user: req.user._id });
+        const myPosts = await Post.find({ user: req.user._id })
+            .sort({ createdAt: -1 })
+            .populate("user", "firstname lastname username email");
+
         return res.status(200).json(myPosts);
     } catch (error) {
         console.log(`Error in getMyPosts controller : ${error}`);

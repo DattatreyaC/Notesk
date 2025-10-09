@@ -34,7 +34,7 @@ export const createNote = async (req, res) => {
 export const editNote = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, content, isPublic, isPinned, tags } = req.body;
+        const { title, content, isPublic, tags } = req.body;
 
         const updatedNote = await Note.findByIdAndUpdate(
             id,
@@ -42,7 +42,6 @@ export const editNote = async (req, res) => {
                 title,
                 content,
                 isPublic,
-                isPinned,
                 tags,
             },
             { new: true },
@@ -70,10 +69,56 @@ export const deleteNote = async (req, res) => {
                 },
             });
 
-            if (updatedUser) return res.status(201).json(deletedNote);
+            if (updatedUser) return res.status(200).json(deletedNote);
         }
     } catch (error) {
         console.log(`Error in deleteNote controller : ${error}`);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const pinNote = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const note = await Note.findByIdAndUpdate(
+            id,
+            {
+                isPinned: true,
+            },
+            { new: true },
+        );
+
+        if (!note) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+
+        return res.status(200).json(note);
+    } catch (error) {
+        console.log(`Error in pinNote controller : ${error}`);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const unpinNote = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const note = await Note.findByIdAndUpdate(
+            id,
+            {
+                isPinned: false,
+            },
+            { new: true },
+        );
+
+        if (!note) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+
+        return res.status(200).json(note);
+    } catch (error) {
+        console.log(`Error in unpinNote controller : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
     }
 };

@@ -4,12 +4,12 @@ import bcrypt from "bcryptjs";
 
 export const register = async (req, res) => {
     try {
-        const { firstname, lastname, username, password } = req.body;
-        if (!password || !username || !firstname || !lastname) {
+        const { firstname, lastname, username, password, email } = req.body;
+        if (!email || !password || !username || !firstname || !lastname) {
             return res.status(400).json({ message: "Fill all fields" });
         }
 
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ email });
 
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
@@ -20,6 +20,7 @@ export const register = async (req, res) => {
         const user = await User.create({
             firstname,
             lastname,
+            email,
             username,
             password: hashedPassword,
         });
@@ -122,21 +123,7 @@ export const getAllProfiles = async (req, res) => {
 export const checkAuth = async (req, res) => {
     try {
         const user = req.user;
-
-        const userDocument = {
-            firstname: user.firstname,
-            lastname: user.lastname,
-            username: user.username,
-            email: user.email,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-            notes: user.notes,
-            posts: user.posts,
-            tasks: user.tasks,
-            friends: user.friends,
-            starredPosts: user.starredPosts,
-        };
-        res.status(200).json(userDocument);
+        res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }

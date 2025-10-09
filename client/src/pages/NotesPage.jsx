@@ -6,21 +6,23 @@ import Loader from "../components/Loader.jsx";
 import CreateNote from "../components/notes-page-components/CreateNote.jsx";
 
 const NotesPage = () => {
-    const { fetchNotes, isNotesLoading, notes } = useNoteStore();
+    const { fetchNotes, isNotesLoading, notes, createNote, deleteNote } =
+        useNoteStore();
 
     const [isCreateOpen, setIsCreateOpen] = useState(false);
 
     useEffect(() => {
+        document.title = "Notes";
         fetchNotes();
-    }, [notes]);
+    }, []);
 
-    // if (isNotesLoading && notes.length === 0) {
-    //     return (
-    //         <div className="w-full h-screen flex items-center justify-center">
-    //             <Loader />;
-    //         </div>
-    //     );
-    // }
+    if (isNotesLoading && notes.length === 0) {
+        return (
+            <div className="w-full h-screen flex items-center justify-center">
+                <Loader />;
+            </div>
+        );
+    }
 
     return (
         <section className="bg w-full h-screen flex flex-col pl-12 p-3 overflow-y-auto relative overflow-x-hidden">
