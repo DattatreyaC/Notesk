@@ -3,19 +3,25 @@ import { toast } from "react-hot-toast";
 import axiosInstance from "../utils/axiosInstance.js";
 
 const useFriendsStore = create((set, get) => ({
+    friends: [],
     outgoingRequests: [], // IDs of users you sent requests to
     incomingRequests: [], // IDs of users who sent you requests
     searchedUsers: [], // Users from search
     friendsLoading: false,
 
+    setFriends: (friends, received) => {
+        set({ friends: friends });
+        set({ incomingRequests: received });
+    },
+
     // Initialize requests from user object (call on login)
     setRequestsFromUser: ({ requestsSent, requestsReceived }) => {
         set({
             outgoingRequests: requestsSent.map((id) =>
-                id._id ? id._id.toString() : id.toString(),
+                id._id ? id._id.toString() : id.toString()
             ),
             incomingRequests: requestsReceived.map((id) =>
-                id._id ? id._id.toString() : id.toString(),
+                id._id ? id._id.toString() : id.toString()
             ),
         });
     },
@@ -29,14 +35,14 @@ const useFriendsStore = create((set, get) => ({
 
         try {
             const response = await axiosInstance.post(
-                `/users/send-request/${id}`,
+                `/users/send-request/${id}`
             );
             if (response.status === 200) toast.success("Request sent");
         } catch (error) {
             // revert
             set({
                 outgoingRequests: state.outgoingRequests.filter(
-                    (reqId) => reqId !== id,
+                    (reqId) => reqId !== id
                 ),
             });
             toast.error("Failed to send request");
@@ -47,7 +53,7 @@ const useFriendsStore = create((set, get) => ({
         const state = get();
         set({
             incomingRequests: state.incomingRequests.filter(
-                (reqId) => reqId !== id,
+                (reqId) => reqId !== id
             ),
         });
 
@@ -64,7 +70,7 @@ const useFriendsStore = create((set, get) => ({
         const state = get();
         set({
             incomingRequests: state.incomingRequests.filter(
-                (reqId) => reqId !== id,
+                (reqId) => reqId !== id
             ),
         });
 
@@ -79,8 +85,9 @@ const useFriendsStore = create((set, get) => ({
 
     removeFriend: async (id) => {
         try {
+            console.log(id);
             const response = await axiosInstance.post(
-                `/users/removeFriend/${id}`,
+                `/users/removeFriend/${id}`
             );
             if (response.status === 200) toast.success("Friend removed");
         } catch (error) {
@@ -93,7 +100,7 @@ const useFriendsStore = create((set, get) => ({
         try {
             set({ friendsLoading: true });
             const response = await axiosInstance.get(
-                `/users/search/${searchValue}`,
+                `/users/search/${searchValue}`
             );
             if (response.status === 200) set({ searchedUsers: response.data });
         } catch (error) {

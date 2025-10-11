@@ -3,6 +3,7 @@ import {
     EllipsisVertical,
     UserRoundCheck,
     UserRoundPlus,
+    UserRoundX,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import useFriendsStore from "../../store/useFriendsStore";
@@ -20,10 +21,10 @@ const UserCard = ({ friend, user }) => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
 
-    // --- Safe relationship checks ---
+    // Safe relationship checks
     const isFriend =
         user?.friends?.some(
-            (f) => f?._id?.toString() === friend?._id?.toString(),
+            (f) => f?._id?.toString() === friend?._id?.toString()
         ) || false;
 
     const outgoingPending =
@@ -31,7 +32,7 @@ const UserCard = ({ friend, user }) => {
     const incomingPending =
         incomingRequests?.includes(friend?._id?.toString()) || false;
 
-    // --- Dropdown click outside handler ---
+    // Dropdown click outside handler
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (menuRef.current && !menuRef.current.contains(e.target))
@@ -74,7 +75,7 @@ const UserCard = ({ friend, user }) => {
                             onClick={() => declineFriendRequest(friend._id)}
                             className="text-red-400 bg-red-700/30 border border-red-500/50 rounded p-1 flex items-center justify-center"
                         >
-                            X
+                            <UserRoundX size={18} />
                         </button>
                     </div>
                 ) : (

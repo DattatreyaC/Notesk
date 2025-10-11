@@ -154,9 +154,10 @@ export const declineFriendRequest = async (req, res) => {
 export const removeFriend = async (req, res) => {
     try {
         const friendId = req.params.id;
-        if (!req.user.friends.includes(friendId)) {
-            return res.status(404).json({ message: "Friend not found" });
-        }
+
+        // if (!req.user.friends.includes(friendId)) {
+        //     return res.status(404).json({ message: "Friend not found" });
+        // }
         const updatedUser = await User.findByIdAndUpdate(req.user._id, {
             $pull: {
                 friends: friendId,

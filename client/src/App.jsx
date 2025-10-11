@@ -17,12 +17,17 @@ import useFriendsStore from "./store/useFriendsStore.js";
 
 const App = () => {
     const { user, checkAuth, isCheckingAuth } = useAuthStore();
+    const { setFriends, friendsLoading } = useFriendsStore();
 
     const { title, description, modalOpen } = useModalStore();
 
     useEffect(() => {
         checkAuth();
     }, []);
+
+    useEffect(() => {
+        setFriends(user?.friends, user?.requestsReceived);
+    }, [user, friendsLoading]);
 
     if (isCheckingAuth && !user) {
         return <Loader />;

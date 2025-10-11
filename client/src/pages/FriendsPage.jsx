@@ -7,20 +7,21 @@ import UserCard from "../components/friends-components/UserCard";
 
 const FriendsPage = () => {
     const { user, isCheckingAuth } = useAuthStore();
+    const { friends } = useFriendsStore();
+
+    const [displayedFriends, setDisplayedFriends] = useState([]);
     const { searchedUsers, friendsLoading } = useFriendsStore();
 
     const [searchValue, setSearchValue] = useState("");
     const [searchingNewFriend, setSearchingNewFriend] = useState(false);
-    const [displayedFriends, setDisplayedFriends] = useState([]);
 
-    // --- Set friends safely on first render ---
+    // Set friends safely on first render
     useEffect(() => {
         if (user?.friends) {
-            setDisplayedFriends(user.friends);
+            setDisplayedFriends(friends);
         }
     }, [user]);
 
-    // --- Filter friends when typing ---
     useEffect(() => {
         if (!searchValue.trim()) {
             setDisplayedFriends(user?.friends || []);
@@ -38,15 +39,15 @@ const FriendsPage = () => {
                         .includes(searchValue.toLowerCase()) ||
                     f?.lastname
                         ?.toLowerCase()
-                        .includes(searchValue.toLowerCase()),
+                        .includes(searchValue.toLowerCase())
             ) || [];
 
         setDisplayedFriends(filtered);
     }, [searchValue, user]);
 
-    if (isCheckingAuth || !user || !user.friends || friendsLoading) {
+    if (isCheckingAuth || !user || !user.friends) {
         return (
-            <div className="w-full h-screen flex items-center justify-center">
+            <div className="w-full h-screen flex items-center justify-center bg z-30">
                 <Loader />
             </div>
         );
@@ -57,7 +58,7 @@ const FriendsPage = () => {
         : displayedFriends;
 
     return (
-        <section className="bg w-full h-screen flex flex-col pl-12 p-3 overflow-y-auto relative overflow-x-hidden">
+        <section className="bg w-full h-screen flex flex-col pl-12 p-3 overflow-y-auto relative overflow-x-hidden z-30">
             <FriendsHeader
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
@@ -66,13 +67,20 @@ const FriendsPage = () => {
             />
 
             <div className="w-full flex flex-wrap gap-4">
-                {friendsToDisplay?.map((friend) => (
-                    <UserCard
-                        key={friend?._id || friend?.username} // safe key fallback
-                        friend={friend}
-                        user={user}
-                    />
-                ))}
+                {friendsLoading && (
+                    <span className="text-center flex w-full ">
+                        <Loader />
+                    </span>
+                )}
+
+                {!friendsLoading &&
+                    friendsToDisplay?.map((friend) => (
+                        <UserCard
+                            key={friend?._id || friend?.username} // safe key fallback
+                            friend={friend}
+                            user={user}
+                        />
+                    ))}
 
                 {!friendsToDisplay?.length && (
                     <span className="text-center w-full mt-10 text-black/60">
