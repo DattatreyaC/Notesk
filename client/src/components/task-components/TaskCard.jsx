@@ -32,14 +32,13 @@ const TaskCard = ({ task }) => {
           })
         : "No due date";
 
-    // Toggle completion independently
     const handleToggleComplete = () => {
-        updateTask(task._id, { ...task, isComplete: !task.isComplete });
+        updateTask(task._id, { ...task, isComplete: !task.isComplete }, true);
     };
 
     return (
         <article
-            className={`border border-neutral-700 rounded-xl p-4 shadow-md hover:shadow-lg transition flex flex-col gap-3
+            className={`border border-neutral-700 rounded-md p-4 shadow-md hover:shadow-lg transition flex flex-col gap-3
             ${
                 task.isComplete
                     ? "bg-neutral-800 line-through text-neutral-500"
@@ -94,7 +93,7 @@ const TaskCard = ({ task }) => {
                 <div className="     flex items-center justify-end text-sm text-neutral-400 mt-auto gap-2">
                     <button
                         disabled={isTasksLoading}
-                        className="flex items-center gap-1 text-blue-400 hover:bg-blue-600/20 border border-blue-500/30 px-2 py-1 rounded text-xs transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center gap-1 text-blue-400 hover:bg-blue-600/20 border border-blue-500/30 px-2 py-1 rounded text-xs transition  disabled:cursor-not-allowed"
                         aria-label={`Update task: ${task.title}`}
                     >
                         <Pencil size={14} />
@@ -104,7 +103,7 @@ const TaskCard = ({ task }) => {
                     <button
                         onClick={() => deleteTask(task._id)}
                         disabled={isTasksLoading}
-                        className="flex items-center gap-1 text-red-400 hover:bg-red-600/20 border border-red-500/30 px-2 py-1 rounded text-xs transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center gap-1 text-red-400 hover:bg-red-600/20 border border-red-500/30 px-2 py-1 rounded text-xs transition  disabled:cursor-not-allowed"
                         aria-label={`Delete task: ${task.title}`}
                     >
                         <Trash2 size={14} />

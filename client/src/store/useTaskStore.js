@@ -46,16 +46,28 @@ const useTaskStore = create((set, get) => ({
     },
 
     updateTask: async (id, payload) => {
+        const previousTasks = get().tasks;
+
         try {
-            set({ isTasksLoading: true });
+            set((state) => ({
+                tasks: state.tasks.map((task) =>
+                    task._id === id ? { ...task, ...payload } : task,
+                ),
+            }));
+
             const response = await axiosInstance.put(
                 `/tasks/update/${id}`,
                 payload,
             );
+
             if (response.status === 200) {
                 toast.success("Task updated");
+            } else {
+                set({ tasks: previousTasks });
+                toast.error("Failed to update task");
             }
         } catch (error) {
+            set({ tasks: previousTasks });
             toast.error("Failed to update task");
         } finally {
             set({ isTasksLoading: false });

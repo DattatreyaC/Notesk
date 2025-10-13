@@ -25,7 +25,7 @@ const TasksPage = () => {
 
                 {isTasksLoading && tasks.length === 0 ? (
                     <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                        {Array.from({ length: 6 }).map((_, index) => (
+                        {Array.from({ length: 5 }).map((_, index) => (
                             <TaskSkeleton key={index} />
                         ))}
                     </div>

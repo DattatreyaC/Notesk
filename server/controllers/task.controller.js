@@ -51,9 +51,9 @@ export const updateTask = async (req, res) => {
         const { title, description, priority, isComplete, dueDate } = req.body;
         const taskId = req.params.id;
 
-        if (req.user.tasks.indexOf(taskId) === -1) {
-            return res.status(400).json({ message: "Not authorized" });
-        }
+        // if (req.user.tasks.indexOf(taskId) === -1) {
+        //     return res.status(400).json({ message: "Not authorized" });
+        // }
 
         const payload = { title, description, priority, isComplete, dueDate };
 
