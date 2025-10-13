@@ -9,7 +9,6 @@ const DashboardNoteCard = ({ note }) => {
     return (
         <div className="border-b w-full h-max py-2">
             <h1 className="text-2xl font-semibold text-black">{note.title}</h1>
-            {/* <p className="font-light ">{note.content}</p> */}
             <p className="text-sm">{convertDate()}</p>
         </div>
     );

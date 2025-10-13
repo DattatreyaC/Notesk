@@ -11,7 +11,7 @@ const isLoggedIn = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         const user = await User.findById(decoded.id).populate(
-            "friends notes posts",
+            "friends notes tasks posts",
         );
 
         if (!user) {

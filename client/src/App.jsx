@@ -14,6 +14,7 @@ import Loader from "./components/Loader.jsx";
 import PostsPage from "./pages/PostsPage.jsx";
 import FriendsPage from "./pages/FriendsPage.jsx";
 import useFriendsStore from "./store/useFriendsStore.js";
+import TasksPage from "./pages/TasksPage.jsx";
 
 const App = () => {
     const { user, checkAuth, isCheckingAuth } = useAuthStore();
@@ -53,6 +54,10 @@ const App = () => {
                 <Route
                     path="/notes"
                     element={user ? <NotesPage /> : <LandingPage />}
+                ></Route>
+                <Route
+                    path="/tasks"
+                    element={user ? <TasksPage /> : <LandingPage />}
                 ></Route>
                 <Route
                     path="/posts"

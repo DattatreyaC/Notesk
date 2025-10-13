@@ -53,7 +53,7 @@ const Sidebar = () => {
                     sidebarOpen
                         ? "w-[50%] sm:w-[40%] md:w-[25%] lg:w-[18%]"
                         : "w-11"
-                }  border bg-black transition-all duration-300 ease-out fixed flex flex-col px-1 shadow-[0_0_10px_black] z-40`}
+                }  border bg-black transition-all duration-300 ease-out fixed flex flex-col px-1 shadow-[0_0_10px_black] z-40 border-r border-r-neutral-100/50`}
             >
                 <div
                     className={`hover:bg-white/30 absolute top-2 rounded-sm p-[3px] ${

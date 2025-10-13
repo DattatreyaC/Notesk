@@ -5,9 +5,11 @@ import connectToDb from "./utils/connectToDb.js";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import noteRoutes from "./routes/note.routes.js";
+import taskRoutes from "./routes/task.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
+import mongoose from "mongoose";
 dotenv.config();
 
 const app = express();
@@ -27,6 +29,7 @@ connectToDb();
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/note", noteRoutes);
+app.use("/api/tasks", taskRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 

@@ -24,12 +24,17 @@ const taskSchema = new mongoose.Schema(
             required: true,
         },
 
+        isComplete: {
+            type: Boolean,
+            default: false,
+        },
+
         dueDate: {
             type: Date,
             default: null,
         },
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
 const Task = mongoose.model("Task", taskSchema);

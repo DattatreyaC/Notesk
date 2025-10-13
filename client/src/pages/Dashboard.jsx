@@ -2,12 +2,14 @@ import React, { useEffect } from "react";
 import useAuthStore from "../store/useAuthStore";
 import useDashboardStore from "../store/useDashboardStore";
 import DashboardNoteCard from "../components/dashboard-components/dashboardNoteCard";
+import DashboardTaskCard from "../components/dashboard-components/dashboardTaskCard";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
     const { user } = useAuthStore();
-    const { fetchDashboardData, dashboardNotes } = useDashboardStore();
+    const { fetchDashboardData, dashboardNotes, dashboardTasks } =
+        useDashboardStore();
 
     useEffect(() => {
         document.title = "Dashboard";
@@ -62,10 +64,38 @@ const Dashboard = () => {
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
                         Tasks ({user.tasks.length})
                     </h2>
-                    <div className="flex-1 flex items-center justify-center text-gray-500">
-                        {user.tasks.length === 0
-                            ? "Add a few tasks for the day..."
-                            : ""}
+                    <div className="flex-1 flex items-center justify-center text-gray-500 ">
+                        {user.tasks.length === 0 ? (
+                            <p className="w-full h-full text-center">
+                                No tasks to display
+                            </p>
+                        ) : (
+                            <div className="p-1 w-full h-full space-y-1">
+                                {dashboardTasks.map((task) => {
+                                    return (
+                                        <DashboardTaskCard
+                                            key={task._id}
+                                            task={task}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="absolute bottom-0 right-0  flex items-center justify-center gap-2 p-1">
+                        {user.tasks.length > 3 && (
+                            <Link
+                                to={"/tasks"}
+                                className="bg-black hover:bg-slate-900 duration-200 text-white p-1.5 rounded cursor-pointer"
+                            >
+                                View More
+                            </Link>
+                        )}
+
+                        <button className="border p-1 bg-black rounded">
+                            <Plus className="text-white" />
+                        </button>
                     </div>
                 </div>
 

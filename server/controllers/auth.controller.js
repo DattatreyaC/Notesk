@@ -42,7 +42,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Fill all fields" });
         }
         const user = await User.findOne({ email }).populate(
-            "friends notes posts"
+            "friends notes posts tasks",
         );
 
         if (!user) {
@@ -84,7 +84,7 @@ export const updateProfile = async (req, res) => {
                 lastname,
                 username,
             },
-            { new: true }
+            { new: true },
         );
 
         if (!updatedUser) {
