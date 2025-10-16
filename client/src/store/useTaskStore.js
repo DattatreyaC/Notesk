@@ -16,6 +16,19 @@ const useTaskStore = create((set, get) => ({
             }
         } catch (error) {
             set({ tasks: [] });
+
+            toast.error("Unable to load tasks", {
+                style: {
+                    border: "1px solid red",
+                    padding: "12px",
+                    color: "white",
+                    background: "rgba(100,0,0,0.8)",
+                },
+                iconTheme: {
+                    primary: "white",
+                    secondary: "red",
+                },
+            });
         } finally {
             set({ isTasksLoading: false });
         }
@@ -34,7 +47,18 @@ const useTaskStore = create((set, get) => ({
                     tasks: [newTask, ...state.tasks],
                 }));
 
-                toast.success("Task created");
+                toast.success("Task Created", {
+                    style: {
+                        border: "1px solid green",
+                        padding: "12px",
+                        color: "white",
+                        background: "rgba(0,100,0,0.8)",
+                    },
+                    iconTheme: {
+                        primary: "white",
+                        secondary: "green",
+                    },
+                });
             } else {
                 toast.error("Failed to create task");
             }
@@ -61,7 +85,18 @@ const useTaskStore = create((set, get) => ({
             );
 
             if (response.status === 200) {
-                toast.success("Task updated");
+                toast.success("Task updated", {
+                    style: {
+                        border: "1px solid green",
+                        padding: "12px",
+                        color: "white",
+                        background: "rgba(0,100,0,0.8)",
+                    },
+                    iconTheme: {
+                        primary: "white",
+                        secondary: "green",
+                    },
+                });
             } else {
                 set({ tasks: previousTasks });
                 toast.error("Failed to update task");
@@ -89,16 +124,49 @@ const useTaskStore = create((set, get) => ({
             const response = await axiosInstance.delete(`/tasks/delete/${id}`);
 
             if (response.status === 200) {
-                toast.success("Task deleted");
+                toast.success("Task Deleted", {
+                    style: {
+                        border: "1px solid green",
+                        padding: "12px",
+                        color: "white",
+                        background: "rgba(0,100,0,0.8)",
+                    },
+                    iconTheme: {
+                        primary: "white",
+                        secondary: "green",
+                    },
+                });
             } else {
-                // ❌ If server doesn’t confirm deletion, revert
                 set({ tasks: previousTasks });
-                toast.error("Failed to delete task");
+
+                toast.error("Failed to delete task", {
+                    style: {
+                        border: "1px solid red",
+                        padding: "12px",
+                        color: "white",
+                        background: "rgba(100,0,0,0.8)",
+                    },
+                    iconTheme: {
+                        primary: "white",
+                        secondary: "red",
+                    },
+                });
             }
         } catch (error) {
-            // ❌ Revert state if error occurs
-            set({ tasks: get().tasksBackup || get().tasks });
-            toast.error("Failed to delete task");
+            set({ tasks: get().previousTasks || get().tasks });
+
+            toast.error("Failed to delete task", {
+                style: {
+                    border: "1px solid red",
+                    padding: "12px",
+                    color: "white",
+                    background: "rgba(100,0,0,0.8)",
+                },
+                iconTheme: {
+                    primary: "white",
+                    secondary: "red",
+                },
+            });
         } finally {
             set({ isTasksLoading: false });
         }

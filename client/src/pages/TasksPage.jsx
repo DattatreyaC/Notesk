@@ -10,6 +10,7 @@ const TasksPage = () => {
     const [isCreateOpen, setIsCreateOpen] = useState(false);
 
     useEffect(() => {
+        document.title = "Tasks";
         fetchTasks();
     }, []);
 
@@ -30,7 +31,7 @@ const TasksPage = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {tasks.length === 0 && !isTasksLoading ? (
                             <p className="w-full text-center">
                                 No Tasks to display Add new tasks to see them

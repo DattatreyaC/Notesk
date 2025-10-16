@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Trash2, Calendar, Pencil } from "lucide-react";
 import { FaCircle } from "react-icons/fa6";
 import useTaskStore from "../../store/useTaskStore";
+import UpdateTask from "./UpdateTask";
 
 const priorityStyles = {
     LOW: {
@@ -20,6 +21,8 @@ const priorityStyles = {
 
 const TaskCard = ({ task }) => {
     const { updateTask, deleteTask, isTasksLoading } = useTaskStore();
+
+    const [isUpdateOpen, setIsUpdateOpen] = useState(false);
 
     const currentPriorityStyles =
         priorityStyles[task.priority] || priorityStyles.HIGH;
@@ -92,6 +95,7 @@ const TaskCard = ({ task }) => {
                 {/* Action Buttons */}
                 <div className="     flex items-center justify-end text-sm text-neutral-400 mt-auto gap-2">
                     <button
+                        onClick={() => setIsUpdateOpen(true)}
                         disabled={isTasksLoading}
                         className="flex items-center gap-1 text-blue-400 hover:bg-blue-600/20 border border-blue-500/30 px-2 py-1 rounded text-xs transition  disabled:cursor-not-allowed"
                         aria-label={`Update task: ${task.title}`}
@@ -111,6 +115,12 @@ const TaskCard = ({ task }) => {
                     </button>
                 </div>
             </div>
+
+            <UpdateTask
+                task={task}
+                isUpdateOpen={isUpdateOpen}
+                setIsUpdateOpen={setIsUpdateOpen}
+            />
         </article>
     );
 };

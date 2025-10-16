@@ -5,11 +5,17 @@ import DashboardNoteCard from "../components/dashboard-components/dashboardNoteC
 import DashboardTaskCard from "../components/dashboard-components/dashboardTaskCard";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
+import DashboardTaskCardSkeleton from "../components/dashboard-components/DashboardTaskCardSkeleton";
+import DashboardNoteCardSkeleton from "../components/dashboard-components/DashboardNoteCardSkeleton";
 
 const Dashboard = () => {
     const { user } = useAuthStore();
-    const { fetchDashboardData, dashboardNotes, dashboardTasks } =
-        useDashboardStore();
+    const {
+        fetchDashboardData,
+        dashboardNotes,
+        dashboardTasks,
+        isFetchingData,
+    } = useDashboardStore();
 
     useEffect(() => {
         document.title = "Dashboard";
@@ -23,15 +29,19 @@ const Dashboard = () => {
                 DASHBOARD
             </h1>
 
-            {/* Card Grid - fills remaining space */}
             <main className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full auto-rows-fr w-full max-w-7xl">
                 {/* Notes */}
                 <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative bg-yellow-50">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
                         Notes ({user.notes.length})
                     </h2>
-                    <div className="flex flex-col items-start text-gray-500 p-2 ">
-                        {dashboardNotes === 0
+
+                    <div className="flex flex-col items-start text-gray-500 p-2 h-full ">
+                        {isFetchingData && dashboardNotes.length === 0
+                            ? Array.from({ length: 3 }).map((_, index) => (
+                                  <DashboardNoteCardSkeleton key={index} />
+                              ))
+                            : dashboardNotes.length === 0
                             ? "Start writing notes to see them here..."
                             : dashboardNotes.map((note) => {
                                   return (
@@ -60,12 +70,18 @@ const Dashboard = () => {
                 </div>
 
                 {/* Tasks */}
-                <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative">
+                <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative bg-neutral-300">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
                         Tasks ({user.tasks.length})
                     </h2>
                     <div className="flex-1 flex items-center justify-center text-gray-500 ">
-                        {user.tasks.length === 0 ? (
+                        {isFetchingData && dashboardTasks.length === 0 ? (
+                            <div className="p-1 w-full h-full space-y-1">
+                                {Array.from({ length: 4 }).map((_, index) => (
+                                    <DashboardTaskCardSkeleton key={index} />
+                                ))}
+                            </div>
+                        ) : !isFetchingData && user?.tasks.length === 0 ? (
                             <p className="w-full h-full text-center">
                                 No tasks to display
                             </p>

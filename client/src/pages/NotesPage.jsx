@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import NotesSummaryHeader from "../components/notes-page-components/NotesSummaryHeader";
 import NoteCard from "../components/notes-page-components/NoteCard";
 import useNoteStore from "../store/useNoteStore";
-import Loader from "../components/Loader.jsx";
 import CreateNote from "../components/notes-page-components/CreateNote.jsx";
+import NoteSkeleton from "../components/notes-page-components/NoteSkeleton.jsx";
 
 const NotesPage = () => {
     const { fetchNotes, isNotesLoading, notes, createNote, deleteNote } =
@@ -15,14 +15,6 @@ const NotesPage = () => {
         document.title = "Notes";
         fetchNotes();
     }, []);
-
-    if (isNotesLoading && notes.length === 0) {
-        return (
-            <div className="w-full h-screen flex items-center justify-center">
-                <Loader />;
-            </div>
-        );
-    }
 
     return (
         <section className="bg w-full h-screen flex flex-col pl-12 p-3 overflow-y-auto relative overflow-x-hidden">
@@ -42,6 +34,14 @@ const NotesPage = () => {
                     isCreateOpen={isCreateOpen}
                     setIsCreateOpen={setIsCreateOpen}
                 />
+
+                {isNotesLoading && notes.length === 0 && (
+                    <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-3">
+                        {Array.from({ length: 5 }).map((_, index) => (
+                            <NoteSkeleton key={index} />
+                        ))}
+                    </div>
+                )}
 
                 {/* Pinned Notes */}
                 {notes.some((note) => note.isPinned) && (

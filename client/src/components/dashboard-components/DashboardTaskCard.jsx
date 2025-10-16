@@ -1,4 +1,4 @@
-import { CheckCircle2Icon, CircleCheckBig } from "lucide-react";
+import { CheckCircle2Icon, CircleCheckBig, ClockFading } from "lucide-react";
 import React from "react";
 
 const DashboardTaskCard = ({ task }) => {
@@ -24,19 +24,25 @@ const DashboardTaskCard = ({ task }) => {
                 <h1 className="text-2xl font-semibold text-black">
                     {task.title}
                 </h1>
-                <p className="text-sm">{formattedDate}</p>
+                <p className="text-sm">{task.description}</p>
             </div>
 
-            <span>
-                {task.isComplete ? (
-                    <CircleCheckBig
-                        size={25}
-                        className="text-white p-0.5 rounded-full bg-green-900"
-                    />
-                ) : (
-                    ""
-                )}
-            </span>
+            <div className="flex items-center justify-end gap-5 w-1/3">
+                <p className="font-normal text-sm text-black">
+                    {formattedDate}
+                </p>
+
+                <div>
+                    {task.isComplete ? (
+                        <CircleCheckBig
+                            size={25}
+                            className="text-white p-0.5 rounded-full bg-green-800"
+                        />
+                    ) : (
+                        <ClockFading className="text-black" />
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
