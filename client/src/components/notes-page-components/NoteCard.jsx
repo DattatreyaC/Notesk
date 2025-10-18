@@ -4,11 +4,13 @@ import { MdOutlinePushPin } from "react-icons/md";
 import { MdPushPin } from "react-icons/md";
 import useNoteStore from "../../store/useNoteStore";
 import EditNote from "../notes-page-components/EditNote.jsx";
+import ViewNote from "./ViewNote.jsx";
 
 const NoteCard = ({ note }) => {
     const { deleteNote, pinNote, unpinNote, isNotesLoading } = useNoteStore();
 
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isViewOpen, setIsViewOpen] = useState(false);
 
     const convertDate = () => {
         const date = new Date(note.createdAt);
@@ -28,7 +30,8 @@ const NoteCard = ({ note }) => {
 
     return (
         <div
-            className={`w-xs sm:w-[18rem] md:w-[20rem] h-fit rounded-md overflow-hidden bg-black text-white p-1 group ${
+            onClick={() => setIsViewOpen(true)}
+            className={`w-xs sm:w-[18rem] md:w-[20rem] h-fit rounded-md overflow-hidden bg-black text-white p-1 group cursor-pointer ${
                 note.isPinned
                     ? "outline-2 outline-offset-2 outline-black"
                     : "shadow-[3px_3px_7px_black]"
@@ -39,7 +42,8 @@ const NoteCard = ({ note }) => {
                 {note.title}
 
                 <span
-                    onClick={() => {
+                    onClick={(e) => {
+                        e.stopPropagation();
                         note.isPinned
                             ? handleUnpin(note._id)
                             : handlePin(note._id);
@@ -69,14 +73,20 @@ const NoteCard = ({ note }) => {
 
                 <div className="flex items-center gap-2">
                     <button
-                        onClick={() => setIsEditOpen(true)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsEditOpen(true);
+                        }}
                         className="bg-blue-400/20 border border-blue-400/30 p-1.5 rounded-full hover:bg-blue-400/30 duration-200"
                     >
                         <Edit2 size={15} className="text-blue-300" />
                     </button>
 
                     <button
-                        onClick={() => handleDelete(note._id)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(note._id);
+                        }}
                         className="bg-red-400/20 border border-red-400/30 p-1.5 rounded-full hover:bg-red-400/30 duration-200"
                     >
                         <Trash2 size={15} className="text-red-500" />
@@ -84,11 +94,21 @@ const NoteCard = ({ note }) => {
                 </div>
             </div>
 
-            <EditNote
-                isEditOpen={isEditOpen}
-                setIsEditOpen={setIsEditOpen}
-                note={note}
-            />
+            {isEditOpen && (
+                <EditNote
+                    isEditOpen={isEditOpen}
+                    setIsEditOpen={setIsEditOpen}
+                    note={note}
+                />
+            )}
+
+            {isViewOpen && (
+                <ViewNote
+                    isViewOpen={isViewOpen}
+                    setIsViewOpen={setIsViewOpen}
+                    note={note}
+                />
+            )}
         </div>
     );
 };

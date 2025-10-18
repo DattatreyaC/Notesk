@@ -42,7 +42,8 @@ const CreateNote = ({ isEditOpen, setIsEditOpen, note }) => {
     return (
         // Overlay (only visible when open)
         <div
-            className={`fixed inset-0 flex items-center justify-center bg-black/70 transition-opacity duration-300 z-50 ${
+            onClick={(e) => e.stopPropagation()}
+            className={`fixed inset-0 flex items-center justify-center bg-black/70 transition-opacity duration-300 z-50 cursor-default ${
                 isEditOpen ? "opacity-100 visible" : "opacity-0 invisible"
             }`}
         >
