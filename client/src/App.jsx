@@ -15,6 +15,7 @@ import PostsPage from "./pages/PostsPage.jsx";
 import FriendsPage from "./pages/FriendsPage.jsx";
 import useFriendsStore from "./store/useFriendsStore.js";
 import TasksPage from "./pages/TasksPage.jsx";
+import UserProfile from "./pages/UserProfile.jsx";
 
 const App = () => {
     const { user, checkAuth, isCheckingAuth } = useAuthStore();
@@ -66,6 +67,10 @@ const App = () => {
                 <Route
                     path="/friends"
                     element={user ? <FriendsPage /> : <LandingPage />}
+                ></Route>
+                <Route
+                    path="/user-profile/:username"
+                    element={user ? <UserProfile /> : <LandingPage />}
                 ></Route>
 
                 <Route path="*" element={<NotFoundPage />}></Route>

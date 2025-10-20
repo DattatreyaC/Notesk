@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import useFriendsStore from "../../store/useFriendsStore";
+import { Link } from "react-router-dom";
 
 const UserCard = ({ friend, user }) => {
     const {
@@ -21,10 +22,9 @@ const UserCard = ({ friend, user }) => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
 
-    // Safe relationship checks
     const isFriend =
         user?.friends?.some(
-            (f) => f?._id?.toString() === friend?._id?.toString()
+            (f) => f?._id?.toString() === friend?._id?.toString(),
         ) || false;
 
     const outgoingPending =
@@ -43,9 +43,9 @@ const UserCard = ({ friend, user }) => {
     }, []);
 
     return (
-        <div className="max-w-sm w-full bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative">
+        <div className="max-w-sm w-full bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative flex flex-col gap-1">
             <div className="w-full flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-white">
+                <h2 className="text-xl font-semibold text-white ">
                     {`${friend?.firstname || ""} ${friend?.lastname || ""}`}
                 </h2>
 
@@ -88,9 +88,16 @@ const UserCard = ({ friend, user }) => {
                 )}
             </div>
 
-            <h5 className="text-sm italic text-white/80 font-light">
+            <h5 className="text-sm italic text-white/80 font-light ">
                 {friend?.username || ""}
             </h5>
+
+            <Link
+                to={`/user-profile/${friend.username}`}
+                className="text-black py-0.5 px-1 rounded w-fit bg-white text-sm border border-white/50 hover:bg-white/80 duration-200"
+            >
+                Profile
+            </Link>
 
             {/* Dropdown menu for friends */}
             {isOpen && isFriend && (

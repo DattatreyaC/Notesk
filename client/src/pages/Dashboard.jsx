@@ -3,7 +3,7 @@ import useAuthStore from "../store/useAuthStore";
 import useDashboardStore from "../store/useDashboardStore";
 import DashboardNoteCard from "../components/dashboard-components/dashboardNoteCard";
 import DashboardTaskCard from "../components/dashboard-components/dashboardTaskCard";
-import { Plus } from "lucide-react";
+import { ArrowUpRight, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import DashboardTaskCardSkeleton from "../components/dashboard-components/DashboardTaskCardSkeleton";
 import DashboardNoteCardSkeleton from "../components/dashboard-components/DashboardNoteCardSkeleton";
@@ -33,46 +33,44 @@ const Dashboard = () => {
                 {/* Notes */}
                 <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative bg-yellow-50">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
-                        Notes ({user.notes.length})
+                        Notes
                     </h2>
 
                     <div className="flex flex-col items-start text-gray-500 p-2 h-full ">
-                        {isFetchingData && dashboardNotes.length === 0
-                            ? Array.from({ length: 3 }).map((_, index) => (
-                                  <DashboardNoteCardSkeleton key={index} />
-                              ))
-                            : dashboardNotes.length === 0
-                            ? "Start writing notes to see them here..."
-                            : dashboardNotes.map((note) => {
-                                  return (
-                                      <DashboardNoteCard
-                                          key={note._id}
-                                          note={note}
-                                      />
-                                  );
-                              })}
+                        {isFetchingData && dashboardNotes.length === 0 ? (
+                            Array.from({ length: 3 }).map((_, index) => (
+                                <DashboardNoteCardSkeleton key={index} />
+                            ))
+                        ) : dashboardNotes.length === 0 ? (
+                            <p className="w-full h-full text-center place-content-center">
+                                Start writing notes to see them here.
+                            </p>
+                        ) : (
+                            dashboardNotes.map((note) => {
+                                return (
+                                    <DashboardNoteCard
+                                        key={note._id}
+                                        note={note}
+                                    />
+                                );
+                            })
+                        )}
                     </div>
 
                     <div className="absolute bottom-0 right-0  flex items-center justify-center gap-2 p-1">
-                        {user.notes.length > 3 && (
-                            <Link
-                                to={"/notes"}
-                                className="bg-black hover:bg-slate-900 duration-200 text-white p-1.5 rounded cursor-pointer"
-                            >
-                                View More
-                            </Link>
-                        )}
-
-                        <button className="border p-1 bg-black rounded">
-                            <Plus className="text-white" />
-                        </button>
+                        <Link
+                            to={"/notes"}
+                            className="bg-black hover:bg-slate-900 duration-200 text-white p-1.5 rounded cursor-pointer"
+                        >
+                            <ArrowUpRight />
+                        </Link>
                     </div>
                 </div>
 
                 {/* Tasks */}
                 <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative bg-neutral-300">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
-                        Tasks ({user.tasks.length})
+                        Tasks
                     </h2>
                     <div className="flex-1 flex items-center justify-center text-gray-500 ">
                         {isFetchingData && dashboardTasks.length === 0 ? (
@@ -81,8 +79,8 @@ const Dashboard = () => {
                                     <DashboardTaskCardSkeleton key={index} />
                                 ))}
                             </div>
-                        ) : !isFetchingData && user?.tasks.length === 0 ? (
-                            <p className="w-full h-full text-center">
+                        ) : !isFetchingData && dashboardTasks?.length === 0 ? (
+                            <p className="w-full h-full text-center place-content-center">
                                 No tasks to display
                             </p>
                         ) : (
@@ -100,18 +98,12 @@ const Dashboard = () => {
                     </div>
 
                     <div className="absolute bottom-0 right-0  flex items-center justify-center gap-2 p-1">
-                        {user.tasks.length > 3 && (
-                            <Link
-                                to={"/tasks"}
-                                className="bg-black hover:bg-slate-900 duration-200 text-white p-1.5 rounded cursor-pointer"
-                            >
-                                View More
-                            </Link>
-                        )}
-
-                        <button className="border p-1 bg-black rounded">
-                            <Plus className="text-white" />
-                        </button>
+                        <Link
+                            to={"/tasks"}
+                            className="bg-black hover:bg-slate-900 duration-200 text-white p-1.5 rounded cursor-pointer"
+                        >
+                            <ArrowUpRight />
+                        </Link>
                     </div>
                 </div>
 

@@ -31,6 +31,29 @@ export const getProfile = async (req, res) => {
     }
 };
 
+export const getOtherUserProfile = async (req, res) => {
+    try {
+        const username = req.params.username;
+
+        const user = await User.find({ username: username })
+            .select("-password -requestsReceived -requestsSent -tasks")
+            .populate({
+                path: "notes",
+                match: { isPublic: true },
+            })
+            .populate("posts");
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json(user[0]);
+    } catch (error) {
+        console.log(`Error in getOtherUserProfile controller : ${error}`);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 export const getFriends = async (req, res) => {
     try {
         const friends = req.user.friends;

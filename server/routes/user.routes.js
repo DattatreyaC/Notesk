@@ -4,6 +4,7 @@ import {
     acceptFriendRequest,
     declineFriendRequest,
     getFriends,
+    getOtherUserProfile,
     getOtherUsers,
     getProfile,
     removeFriend,
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.get("/others", isLoggedIn, getOtherUsers);
 router.get("/profile", isLoggedIn, getProfile);
+router.get("/profile/:username", isLoggedIn, getOtherUserProfile);
 router.get("/friends", isLoggedIn, getFriends);
 router.post("/send-request/:id", isLoggedIn, sendFriendRequest);
 router.post("/accept/:id", isLoggedIn, acceptFriendRequest);

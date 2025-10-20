@@ -41,9 +41,7 @@ export const login = async (req, res) => {
         if (!email || !password) {
             return res.status(400).json({ message: "Fill all fields" });
         }
-        const user = await User.findOne({ email }).populate(
-            "friends notes posts tasks",
-        );
+        const user = await User.findOne({ email }).populate("friends");
 
         if (!user) {
             return res.status(400).json({ message: "Invalid Credentials" });

@@ -5,9 +5,11 @@ import { MdPushPin } from "react-icons/md";
 import useNoteStore from "../../store/useNoteStore";
 import EditNote from "../notes-page-components/EditNote.jsx";
 import ViewNote from "./ViewNote.jsx";
+import useAuthStore from "../../store/useAuthStore.js";
 
 const NoteCard = ({ note }) => {
     const { deleteNote, pinNote, unpinNote, isNotesLoading } = useNoteStore();
+    const { user } = useAuthStore();
 
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isViewOpen, setIsViewOpen] = useState(false);

@@ -45,7 +45,7 @@ const useNoteStore = create((set) => ({
                     style: {
                         padding: "10px",
                         color: "black",
-                        background: "green",
+                        background: "rgba(0,130,0,0.7)",
                     },
                     iconTheme: {
                         primary: "black",
@@ -84,7 +84,7 @@ const useNoteStore = create((set) => ({
                     style: {
                         padding: "10px",
                         color: "black",
-                        background: "green",
+                        background: "rgba(0,130,0,0.7)",
                     },
                     iconTheme: {
                         primary: "black",
@@ -111,7 +111,7 @@ const useNoteStore = create((set) => ({
                         border: "1px solid green",
                         padding: "10px",
                         color: "black",
-                        background: "green",
+                        background: "rgba(0,130,0,0.7)",
                     },
                     iconTheme: {
                         primary: "black",
@@ -120,7 +120,7 @@ const useNoteStore = create((set) => ({
                 });
 
                 set((state) => ({
-                    notes: state.notes.filter((note) => note._id !== id), // 👈 remove locally
+                    notes: state.notes.filter((note) => note._id !== id),
                 }));
             }
         } catch (error) {

@@ -51,12 +51,12 @@ const useTaskStore = create((set, get) => ({
                     style: {
                         border: "1px solid green",
                         padding: "12px",
-                        color: "white",
-                        background: "rgba(0,100,0,0.8)",
+                        color: "black",
+                        background: "rgba(0,130,0,0.7)",
                     },
                     iconTheme: {
-                        primary: "white",
-                        secondary: "green",
+                        primary: "black",
+                        secondary: "white",
                     },
                 });
             } else {
@@ -89,12 +89,12 @@ const useTaskStore = create((set, get) => ({
                     style: {
                         border: "1px solid green",
                         padding: "12px",
-                        color: "white",
-                        background: "rgba(0,100,0,0.8)",
+                        color: "black",
+                        background: "rgba(0,130,0,0.7",
                     },
                     iconTheme: {
-                        primary: "white",
-                        secondary: "green",
+                        primary: "black",
+                        secondary: "white",
                     },
                 });
             } else {
@@ -128,12 +128,12 @@ const useTaskStore = create((set, get) => ({
                     style: {
                         border: "1px solid green",
                         padding: "12px",
-                        color: "white",
-                        background: "rgba(0,100,0,0.8)",
+                        color: "black",
+                        background: "rgba(0,130,0,0.7)",
                     },
                     iconTheme: {
-                        primary: "white",
-                        secondary: "green",
+                        primary: "black",
+                        secondary: "white",
                     },
                 });
             } else {

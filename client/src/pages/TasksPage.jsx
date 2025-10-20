@@ -31,16 +31,22 @@ const TasksPage = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="w-full">
                         {tasks.length === 0 && !isTasksLoading ? (
-                            <p className="w-full text-center">
-                                No Tasks to display Add new tasks to see them
-                                here.
-                            </p>
+                            <div>
+                                <p className="w-full text-center text-lg font-semibold">
+                                    No Tasks to display.
+                                </p>
+                                <p className="w-full text-center">
+                                    Start adding tasks to see them here.
+                                </p>
+                            </div>
                         ) : (
-                            tasks.map((task) => (
-                                <TaskCard key={task._id} task={task} />
-                            ))
+                            <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                                {tasks.map((task) => (
+                                    <TaskCard key={task._id} task={task} />
+                                ))}
+                            </div>
                         )}
                     </div>
                 )}

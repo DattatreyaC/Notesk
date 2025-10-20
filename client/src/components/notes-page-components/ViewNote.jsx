@@ -60,9 +60,11 @@ const ViewNote = ({ isViewOpen, setIsViewOpen, note }) => {
                     </div>
 
                     {/* Content */}
-                    <div className="flex-grow bg-neutral-300 text-black resize-none p-4 focus:outline-none">
-                        {content}
-                    </div>
+                    <textarea
+                        className="flex-grow bg-neutral-300 text-black resize-none p-4 focus:outline-none"
+                        value={content}
+                        readOnly
+                    ></textarea>
 
                     {/* Footer */}
                     <div className="flex items-center justify-between px-5 py-3 bg-black text-white rounded-b-lg">
