@@ -32,7 +32,11 @@ const App = () => {
     }, [user, friendsLoading]);
 
     if (isCheckingAuth && !user) {
-        return <Loader />;
+        return (
+            <div className="w-full h-screen flex items-center justify-center">
+                <Loader server={true} />;
+            </div>
+        );
     }
 
     return (

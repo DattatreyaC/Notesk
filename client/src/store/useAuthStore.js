@@ -2,21 +2,18 @@ import { create } from "zustand";
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-hot-toast";
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
     user: null,
     isCheckingAuth: false,
-    isAuthLoading: false, //login || signup
+    isAuthLoading: false,
+    otpAction: null,
+    otpEmail: null,
 
     checkAuth: async () => {
         try {
             set({ isCheckingAuth: true });
-
             const response = await axiosInstance.get("/auth/profile");
-            if (response.status === 200) {
-                set({ user: response.data });
-            } else {
-                set({ user: null });
-            }
+            set({ user: response.status === 200 ? response.data : null });
         } catch (error) {
             set({ user: null });
         } finally {
@@ -24,51 +21,90 @@ const useAuthStore = create((set) => ({
         }
     },
 
-    login: async (payload) => {
+    requestOtp: async (formData, action) => {
         try {
-            set({ isAuthLoading: true });
+            const email = formData.email;
 
-            const response = await axiosInstance.post("/auth/login", payload, {
-                withCredentials: true,
-            });
-            if (response) {
-                set({ user: response.data });
+            set({ isAuthLoading: true });
+            set({ otpAction: action, otpEmail: email });
+
+            let endpoint = "";
+            switch (action) {
+                case "login":
+                    endpoint = "/auth/login";
+                    break;
+                case "register":
+                    endpoint = "/auth/register";
+                    break;
+                case "forgotPassword":
+                    endpoint = "/auth/forgot-password";
+                    break;
+                case "delete":
+                    endpoint = "/auth/delete";
+                    break;
+                default:
+                    throw new Error("Invalid OTP action");
+            }
+
+            const payload = formData;
+
+            const response = await axiosInstance.post(endpoint, payload);
+
+            if (response.status === 200) {
+                toast.success(response.data.message);
+                return true;
             }
         } catch (error) {
-            set({ user: null });
+            toast.error(error?.response?.data?.message || "Error sending OTP");
         } finally {
             set({ isAuthLoading: false });
         }
     },
 
-    register: async (payload) => {
+    verifyOtp: async (otp) => {
         try {
             set({ isAuthLoading: true });
+            const { otpAction, otpEmail } = get();
 
-            const response = await axiosInstance.post(
-                "/auth/register",
-                payload,
-                { withCredentials: true }
-            );
+            let endpoint = "";
+            let payload = { email: otpEmail, otp };
 
-            if (response.status === 201) {
-                set({ user: response.data });
+            switch (otpAction) {
+                case "login":
+                    endpoint = "/auth/login/verify-otp";
+                    break;
+                case "register":
+                    endpoint = "/auth/register/verify-otp";
+                    break;
+                case "forgotPassword":
+                    endpoint = "/auth/reset-password";
+                    break;
+                case "delete":
+                    endpoint = "/auth/delete";
+                    break;
+                default:
+                    throw new Error("Invalid OTP action");
+            }
+
+            const response = await axiosInstance.post(endpoint, payload, {
+                withCredentials: true,
+            });
+
+            if (response.status === 200) {
+                toast.success(response.data.message);
+
+                if (otpAction === "login" || otpAction === "register") {
+                    set({ user: response.data.user });
+                }
+                set({ otpAction: null, otpEmail: null });
+
+                return true;
             }
         } catch (error) {
-            set({ user: null });
-
-            toast.error(error?.response?.data?.message, {
-                style: {
-                    border: "1px solid red",
-                    padding: "12px",
-                    color: "white",
-                    background: "rgba(100,0,0,0.8)",
-                },
-                iconTheme: {
-                    primary: "white",
-                    secondary: "red",
-                },
-            });
+            toast.error(
+                error?.response?.data?.message || "OTP verification failed",
+            );
+            return false;
         } finally {
             set({ isAuthLoading: false });
         }
@@ -77,30 +113,14 @@ const useAuthStore = create((set) => ({
     logout: async () => {
         try {
             set({ isAuthLoading: true });
-
             const response = await axiosInstance.post("/auth/logout");
-            if (response.status === 200) {
-                set({ user: null });
-            }
+            if (response.status === 200) set({ user: null });
         } catch (error) {
-            toast.error("Server error. Please try again", {
-                style: {
-                    border: "1px solid red",
-                    padding: "12px",
-                    color: "white",
-                    background: "rgba(100,0,0,0.8)",
-                },
-                iconTheme: {
-                    primary: "white",
-                    secondary: "red",
-                },
-            });
+            toast.error("Server error. Please try again");
         } finally {
             set({ isAuthLoading: false });
         }
     },
-
-    deleteAccount: () => {},
 }));
 
 export default useAuthStore;

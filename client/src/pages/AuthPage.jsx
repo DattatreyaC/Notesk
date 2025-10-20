@@ -12,9 +12,9 @@ const AuthPage = () => {
     return (
         <main className="w-full h-screen flex items-center justify-center flex-col bg">
             <h1 className="text-4xl font-bold">Notesk</h1>
-            <div className="w-full max-w-xl h-[450px] p-1">
+            <div className="w-full max-w-xl h-[450px] p-1 ">
                 {/* 2 tabs for register and login */}
-                <div className="w-full max-w-xl border border-black/50 rounded p-0 md:p-5 overflow-hidden relative">
+                <div className="w-full max-w-xl border border-black/50 rounded p-0 md:p-5 overflow-hidden relative bg-neutral-200">
                     <div className="flex gap-0 p-1 mb-2">
                         <span
                             className={`w-full border-b-3 pb-2 ${
@@ -24,10 +24,10 @@ const AuthPage = () => {
                             }`}
                         >
                             <button
-                                className={` border w-full cursor-pointer p-3 font-semibold ${
+                                className={` border w-full cursor-pointer p-3 font-semibold rounded-l ${
                                     choice === "register"
                                         ? "bg-black text-white hover:text-white hover:bg-black border-black"
-                                        : "text-black/60 hover:text-black hover:bg-black/8 border-black/50 hover:border-black"
+                                        : "text-black/60 hover:text-black bg-neutral-400 hover:bg-black/8 border-black/50 hover:border-black"
                                 }  duration-200`}
                                 onClick={() => handleAuthMode("register")}
                             >
@@ -43,10 +43,10 @@ const AuthPage = () => {
                             }`}
                         >
                             <button
-                                className={` border w-full cursor-pointer p-3 font-semibold ${
+                                className={` border w-full cursor-pointer p-3 font-semibold rounded-r ${
                                     choice === "login"
                                         ? "bg-black text-white hover:text-white hover:bg-black border-black"
-                                        : "text-black/60 hover:text-black hover:bg-black/8 border-black/50 hover:border-black"
+                                        : "text-black/60 hover:text-black bg-neutral-400 hover:bg-black/8 border-black/50 hover:border-black"
                                 }  duration-200`}
                                 onClick={() => handleAuthMode("login")}
                             >

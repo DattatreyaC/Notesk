@@ -89,7 +89,7 @@ const Sidebar = () => {
                             className={`${
                                 sidebarOpen
                                     ? "opacity-100"
-                                    : "opacity-0 absolute"
+                                    : "opacity-0 absolute -translate-x-100"
                             } duration-200 transition-all text-2xl`}
                         >
                             {user.firstname}

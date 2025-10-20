@@ -1,113 +1,104 @@
 import React, { useState } from "react";
 import useAuthStore from "../../store/useAuthStore";
 import Loader from "../Loader";
+import OtpModal from "../modals/OtpModal.jsx";
 
 const LoginComponent = () => {
-    const { login, isAuthLoading } = useAuthStore();
+    const { login, verifyOtp, requestOtp, isAuthLoading } = useAuthStore();
 
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-    });
-
+    const [formData, setFormData] = useState({ email: "", password: "" });
     const [errors, setErrors] = useState({});
+    const [showOtpModal, setShowOtpModal] = useState(false);
 
     const validateForm = () => {
         const newErrors = {};
-
-        // Email validation
-        if (!formData.email.trim()) {
-            newErrors.email = "Email is required.";
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            // Simple regex for email format
+        if (!formData.email.trim()) newErrors.email = "Email is required.";
+        else if (!/\S+@\S+\.\S+/.test(formData.email))
             newErrors.email = "Email address is invalid.";
-        }
 
-        // Password validation
-        if (!formData.password) {
-            newErrors.password = "Password is required.";
-        } else if (formData.password.length < 6) {
+        if (!formData.password) newErrors.password = "Password is required.";
+        else if (formData.password.length < 6)
             newErrors.password = "Password must be at least 6 characters.";
-        }
 
         setErrors(newErrors);
-
-        // Return true if there are no errors, false otherwise
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const isValid = validateForm();
-        if (isValid) {
-            login(formData);
-        }
+        if (!validateForm()) return;
+
+        if (await requestOtp(formData, "login")) setShowOtpModal(true);
+    };
+
+    const handlePasswordReset = async (e) => {
+        e.preventDefault();
+
+        // if()
+    };
+
+    const handleOtpSubmit = async (otp) => {
+        const verified = await verifyOtp(otp);
+        if (verified) setShowOtpModal(false);
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     return (
         <>
-            <form className="p-3 space-y-2.5" onSubmit={handleSubmit}>
-                <div>
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded"
-                    />
-                    {errors.email && (
-                        <p className="pt-1 text-xs text-red-500">
-                            {errors.email}
-                        </p>
-                    )}
-                </div>
+            <form className="p-3 space-y-2.5 " onSubmit={handleSubmit}>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-neutral-300"
+                />
+                {errors.email && (
+                    <p className="pt-1 text-xs text-red-500">{errors.email}</p>
+                )}
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-neutral-300"
+                />
+                {errors.password && (
+                    <p className="pt-1 text-xs text-red-500">
+                        {errors.password}
+                    </p>
+                )}
 
                 <div>
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full p-2 border rounded"
-                    />
-                    {errors.password && (
-                        <p className="pt-1 text-xs text-red-500">
-                            {errors.password}
-                        </p>
-                    )}
-                </div>
-
-                <div className="w-full h-fit pt-5">
-                    <button
-                        type="submit"
-                        disabled={isAuthLoading}
-                        className="group relative z-0 w-full cursor-pointer overflow-hidden rounded border-2 hover:border-black/60 p-2.5 transition-colors duration-200"
+                    <p
+                        onClick={handlePasswordReset}
+                        className="underline mt-1 text-[15px] cursor-pointer text-black/70 hover:text-black duration-100"
                     >
-                        <div className="relative z-10 text-black font-semibold transition-colors duration-300 group-hover:text-white flex items-center justify-center gap-1">
-                            {isAuthLoading
-                                ? "Logging in"
-                                : "Login to your account"}
-
-                            {isAuthLoading && (
-                                <div className=" h-fit">
-                                    <Loader />
-                                </div>
-                            )}
-                        </div>
-                        <span className="absolute inset-0 z-0 -translate-x-full transform bg-gradient-to-r from-black via-black to-transparent transition-transform duration-200 group-hover:translate-x-0"></span>
-                    </button>
+                        Forgot Password
+                    </p>
                 </div>
+
+                <button
+                    type="submit"
+                    disabled={isAuthLoading}
+                    className="w-full p-2.5 mt-4 border rounded font-semibold bg-black/40 hover:bg-black hover:text-white duration-200"
+                >
+                    {isAuthLoading ? <Loader /> : "Login"}
+                </button>
             </form>
+
+            <OtpModal
+                isOpen={showOtpModal}
+                onClose={() => setShowOtpModal(false)}
+                onSubmit={handleOtpSubmit}
+            />
         </>
     );
 };

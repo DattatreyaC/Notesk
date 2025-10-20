@@ -97,7 +97,7 @@ const TaskCard = ({ task }) => {
                     <button
                         onClick={() => setIsUpdateOpen(true)}
                         disabled={isTasksLoading}
-                        className="flex items-center gap-1 text-blue-400 hover:bg-blue-600/20 border border-blue-500/30 px-2 py-1 rounded text-xs transition  disabled:cursor-not-allowed"
+                        className="flex items-center gap-1 text-blue-400 bg-blue-600/10 hover:bg-blue-600/20 border border-blue-500/30 px-2 py-1 rounded text-xs transition  disabled:cursor-not-allowed"
                         aria-label={`Update task: ${task.title}`}
                     >
                         <Pencil size={14} />
@@ -107,7 +107,7 @@ const TaskCard = ({ task }) => {
                     <button
                         onClick={() => deleteTask(task._id)}
                         disabled={isTasksLoading}
-                        className="flex items-center gap-1 text-red-400 hover:bg-red-600/20 border border-red-500/30 px-2 py-1 rounded text-xs transition  disabled:cursor-not-allowed"
+                        className="flex items-center gap-1 text-red-400 bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 px-2 py-1 rounded text-xs transition  disabled:cursor-not-allowed"
                         aria-label={`Delete task: ${task.title}`}
                     >
                         <Trash2 size={14} />

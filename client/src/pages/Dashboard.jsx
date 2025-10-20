@@ -31,7 +31,7 @@ const Dashboard = () => {
 
             <main className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full auto-rows-fr w-full max-w-7xl">
                 {/* Notes */}
-                <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative bg-yellow-50">
+                <div className="border rounded shadow-md flex flex-col  overflow-x-hidden overflow-y-auto relative bg-yellow-100">
                     <h2 className="bg-black text-white text-xl text-center p-2 font-semibold">
                         Notes
                     </h2>
