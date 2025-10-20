@@ -9,7 +9,6 @@ import taskRoutes from "./routes/task.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
-import mongoose from "mongoose";
 dotenv.config();
 
 const app = express();

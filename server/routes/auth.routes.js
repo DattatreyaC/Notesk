@@ -1,4 +1,5 @@
 import express from "express";
+import isLoggedIn from "../middlewares/isLoggedIn.js";
 import {
     checkAuth,
     deleteProfile,
@@ -6,31 +7,34 @@ import {
     login,
     logout,
     register,
+    verifyRegisterOtp,
+    verifyLoginOtp,
     updateProfile,
+    forgotPassword,
+    resetPassword,
 } from "../controllers/auth.controller.js";
-import isLoggedIn from "../middlewares/isLoggedIn.js";
 
 const router = express.Router();
 
-//signup
+//  AUTH ROUTES
+
 router.post("/register", register);
+router.post("/register/verify-otp", verifyRegisterOtp);
 
-//login
 router.post("/login", login);
+router.post("/login/verify-otp", verifyLoginOtp);
 
-//logout
 router.post("/logout", isLoggedIn, logout);
 
-//update profile
 router.put("/update", isLoggedIn, updateProfile);
 
-//delete profile
 router.delete("/delete", isLoggedIn, deleteProfile);
 
-//get all profiles
 router.get("/profiles", getAllProfiles);
 
-//get auth / check auth
 router.get("/profile", isLoggedIn, checkAuth);
+
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 export default router;

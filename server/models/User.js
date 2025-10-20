@@ -80,11 +80,24 @@ const userSchema = new mongoose.Schema(
                 default: [],
             },
         ],
+
+        otp: {
+            type: String,
+        },
+        otpExpires: {
+            type: Date,
+        },
+        isOtpVerified: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,
     },
 );
+
+userSchema.index({ otpExpires: 1 }, { expireAfterSeconds: 600 });
 
 const User = mongoose.model("User", userSchema);
 
