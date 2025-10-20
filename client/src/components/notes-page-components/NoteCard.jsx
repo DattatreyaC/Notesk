@@ -50,7 +50,7 @@ const NoteCard = ({ note }) => {
                             ? handleUnpin(note._id)
                             : handlePin(note._id);
                     }}
-                    className="absolute w-fit h-fit right-3 cursor-pointer rounded overflow-hidden rotate-45 text-xl"
+                    className="absolute w-fit h-fit right-3 cursor-pointer rounded-full p-1 overflow-hidden rotate-45 hover:bg-neutral-300/20 duration-200 text-xl"
                 >
                     {note.isPinned ? (
                         <MdPushPin className="rounded-full" />

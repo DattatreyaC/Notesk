@@ -6,52 +6,72 @@ import UserNotes from "../components/friends-components/UserNotes";
 
 const UserProfile = () => {
     const { username } = useParams();
-
     const { userProfile, getProfileByUsername, friendsLoading } =
         useFriendsStore();
 
     const [activeTab, setActiveTab] = useState("Notes");
 
+    // ✅ Re-fetch profile when username changes
     useEffect(() => {
-        getProfileByUsername(username);
-    }, []);
+        if (username) getProfileByUsername(username);
+    }, [username, getProfileByUsername]);
+
+    // ✅ Loading State
+    if (friendsLoading) {
+        return (
+            <section className="bg w-full h-screen flex flex-col pl-12 pr-1 overflow-y-auto relative overflow-x-hidden items-center justify-center">
+                <Loader className="animate-spin" size={40} />
+            </section>
+        );
+    }
+
+    if (!userProfile) {
+        return (
+            <section className="bg w-full h-screen flex flex-col pl-12 pr-1 overflow-y-auto relative overflow-x-hidden items-center justify-center text-neutral-700">
+                <CircleUserRound size={80} strokeWidth={1} className="mb-3" />
+                <h2 className="text-2xl font-semibold mb-2">User not found</h2>
+                <Link
+                    to="/friends"
+                    className="flex items-center gap-2 text-sm border border-black/40 rounded-md px-3 py-1 hover:bg-black/10 transition"
+                >
+                    <ArrowLeft size={18} />
+                    Go Back
+                </Link>
+            </section>
+        );
+    }
 
     return (
-        <section className="bg w-full h-screen flex flex-col pl-12 pr-1  overflow-y-auto relative overflow-x-hidden">
-            <main className="w-full h-full flex items-center justify-center relative ">
+        <section className="bg w-full h-screen flex flex-col pl-12 pr-1 overflow-y-auto relative overflow-x-hidden">
+            <main className="w-full h-full flex items-center justify-center relative">
+                {/* Go Back Button */}
                 <Link
-                    to={"/friends"}
-                    className="absolute flex items-center gap-1 top-5 left-5 p-2 rounded-full text-sm"
+                    to="/friends"
+                    className="absolute flex items-center gap-1 top-5 left-5 p-2 rounded-full text-sm hover:bg-white/10 transition"
                 >
                     <ArrowLeft />
                     <span>Go Back</span>
                 </Link>
 
-                <article className="flex flex-col gap-2 w-full sm:w-lg md:w-xl">
-                    <div className=" flex flex-col items-center gap-1.5 border-b">
+                {/* Profile Content */}
+                <article className="flex flex-col gap-3 w-full sm:w-lg md:w-xl">
+                    {/* Header */}
+                    <div className="flex flex-col items-center gap-2 border-b pb-3">
                         <CircleUserRound size={80} strokeWidth={1} />
-
-                        {friendsLoading ? (
-                            <h1 className="bg-neutral-800 w-80 h-7 rounded-md animate-pulse "></h1>
-                        ) : (
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl text-center">{`${userProfile?.firstname} ${userProfile?.lastname}`}</h1>
-                        )}
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl text-center font-semibold">
+                            {userProfile?.firstname} {userProfile?.lastname}
+                        </h1>
                     </div>
 
-                    {friendsLoading ? (
-                        <h1 className="bg-neutral-800 w-40 h-5 rounded-md animate-pulse "></h1>
-                    ) : (
-                        <h2 className="italic px-1 font-semibold">
-                            {userProfile?.username}
+                    {/* Username + Email */}
+                    <div className="px-1 space-y-1">
+                        <h2 className="italic text-neutral-900 font-semibold">
+                            @{userProfile?.username}
                         </h2>
-                    )}
+                        <p className="text-neutral-700">{userProfile?.email}</p>
+                    </div>
 
-                    {friendsLoading ? (
-                        <h1 className="bg-neutral-800 w-50 h-5 rounded-md animate-pulse "></h1>
-                    ) : (
-                        <h2 className="px-1">{userProfile?.email}</h2>
-                    )}
-
+                    {/* Tabs */}
                     <div className="w-full border rounded px-2.5 py-1.5 bg-black flex items-center gap-3">
                         <button
                             onClick={() => setActiveTab("Notes")}
@@ -66,7 +86,7 @@ const UserProfile = () => {
 
                         <button
                             onClick={() => setActiveTab("Posts")}
-                            className={`border border-white/50 font-semibold cursor-pointer py-1 px-1.5 rounded duration-200 ${
+                            className={`border border-white/50 py-1 px-1.5 rounded font-semibold cursor-pointer duration-200 ${
                                 activeTab === "Posts"
                                     ? "bg-white text-black"
                                     : "hover:bg-white/30 bg-black text-white"
@@ -75,21 +95,17 @@ const UserProfile = () => {
                             Posts
                         </button>
                     </div>
-                    {friendsLoading ? (
-                        <div className="w-full sm:w-lg min-h-60 bg-neutral-400 border border-neutral-600 rounded-md p-1 overflow-auto flex items-center justify-center">
-                            <span className="animate-spin">
-                                <Loader />
-                            </span>
-                        </div>
-                    ) : activeTab === "Notes" ? (
-                        <UserNotes notes={userProfile?.notes} />
-                    ) : (
-                        <div className="w-full min-h-60 bg-neutral-400 border border-neutral-600 rounded-md p-1 overflow-auto flex items-center justify-center">
-                            {/* <span className="animate-spin">
-                                <Loader />
-                            </span> */}
-                        </div>
-                    )}
+
+                    {/* Content */}
+                    <div className="w-full  min-h-50 max-h-60 bg-neutral-300 border border-neutral-600 rounded-md p-1 overflow-auto flex flex-col items-center justify-center">
+                        {activeTab === "Notes" ? (
+                            <UserNotes notes={userProfile?.notes} />
+                        ) : (
+                            <div className="text-neutral-700 italic">
+                                No posts to display
+                            </div>
+                        )}
+                    </div>
                 </article>
             </main>
         </section>

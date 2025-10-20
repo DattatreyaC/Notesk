@@ -75,7 +75,7 @@ const Dashboard = () => {
                     <div className="flex-1 flex items-center justify-center text-gray-500 ">
                         {isFetchingData && dashboardTasks.length === 0 ? (
                             <div className="p-1 w-full h-full space-y-1">
-                                {Array.from({ length: 4 }).map((_, index) => (
+                                {Array.from({ length: 3 }).map((_, index) => (
                                     <DashboardTaskCardSkeleton key={index} />
                                 ))}
                             </div>

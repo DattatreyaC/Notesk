@@ -9,13 +9,16 @@ export const dashboardData = async (req, res) => {
 
         const notes = await Note.find({ user: user._id })
             .sort({ createdAt: -1 })
-            .limit(4);
+            .limit(3);
+
         const posts = await Post.find({ user: user._id })
             .sort({ createdAt: -1 })
             .limit(3);
+
         const tasks = await Task.find({ user: user._id })
             .sort({ createdAt: -1 })
             .limit(3);
+
         const starred = user.starredPosts;
 
         return res.status(200).json({

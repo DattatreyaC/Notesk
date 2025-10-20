@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axiosInstance from "../utils/axiosInstance";
+import { toast } from "react-hot-toast";
 
 const useAuthStore = create((set) => ({
     user: null,
@@ -47,13 +48,27 @@ const useAuthStore = create((set) => ({
             const response = await axiosInstance.post(
                 "/auth/register",
                 payload,
-                { withCredentials: true },
+                { withCredentials: true }
             );
-            if (response) {
+
+            if (response.status === 201) {
                 set({ user: response.data });
             }
         } catch (error) {
             set({ user: null });
+
+            toast.error(error?.response?.data?.message, {
+                style: {
+                    border: "1px solid red",
+                    padding: "12px",
+                    color: "white",
+                    background: "rgba(100,0,0,0.8)",
+                },
+                iconTheme: {
+                    primary: "white",
+                    secondary: "red",
+                },
+            });
         } finally {
             set({ isAuthLoading: false });
         }
