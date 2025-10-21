@@ -56,16 +56,36 @@ export const getOtherUserProfile = async (req, res) => {
 
 export const getFriends = async (req, res) => {
     try {
-        const friends = req.user.friends;
-        const incomingRequests = req.user.requestsReceived;
-        const outgoingRequests = req.user.requestsSent;
+        const user = await User.findById(req.user._id).populate("friends");
+
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
         return res.status(200).json({
-            friends,
-            incomingRequests,
-            outgoingRequests,
+            friends: user.friends,
         });
     } catch (error) {
         console.log(`Error in getFriends controller : ${error}`);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const getFriendRequests = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).populate(
+            "requestsReceived",
+        );
+
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        return res.status(200).json({
+            requestsReceived: user.requestsReceived,
+        });
+    } catch (error) {
+        console.log(`Error in getFriendRequests controller : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
     }
 };

@@ -13,23 +13,17 @@ import NotesPage from "./pages/NotesPage.jsx";
 import Loader from "./components/Loader.jsx";
 import PostsPage from "./pages/PostsPage.jsx";
 import FriendsPage from "./pages/FriendsPage.jsx";
-import useFriendsStore from "./store/useFriendsStore.js";
 import TasksPage from "./pages/TasksPage.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
 
 const App = () => {
     const { user, checkAuth, isCheckingAuth } = useAuthStore();
-    const { setFriends, friendsLoading } = useFriendsStore();
 
-    const { title, description, modalOpen } = useModalStore();
+    const { modalOpen } = useModalStore();
 
     useEffect(() => {
         checkAuth();
     }, []);
-
-    useEffect(() => {
-        setFriends(user?.friends, user?.requestsReceived);
-    }, [user, friendsLoading]);
 
     if (isCheckingAuth && !user) {
         return (

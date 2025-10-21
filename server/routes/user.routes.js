@@ -3,6 +3,7 @@ import isLoggedIn from "../middlewares/isLoggedIn.js";
 import {
     acceptFriendRequest,
     declineFriendRequest,
+    getFriendRequests,
     getFriends,
     getOtherUserProfile,
     getOtherUsers,
@@ -18,6 +19,7 @@ router.get("/others", isLoggedIn, getOtherUsers);
 router.get("/profile", isLoggedIn, getProfile);
 router.get("/profile/:username", isLoggedIn, getOtherUserProfile);
 router.get("/friends", isLoggedIn, getFriends);
+router.get("/friendRequests", isLoggedIn, getFriendRequests);
 router.post("/send-request/:id", isLoggedIn, sendFriendRequest);
 router.post("/accept/:id", isLoggedIn, acceptFriendRequest);
 router.post("/decline/:id", isLoggedIn, declineFriendRequest);

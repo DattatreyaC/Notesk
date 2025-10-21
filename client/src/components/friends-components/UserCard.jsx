@@ -43,7 +43,7 @@ const UserCard = ({ friend, user }) => {
     }, []);
 
     return (
-        <div className="max-w-sm w-full bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative flex flex-col gap-1">
+        <div className="max-w-sm w-full h-max bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative flex flex-col gap-1">
             <div className="w-full flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-white ">
                     {`${friend?.firstname || ""} ${friend?.lastname || ""}`}
@@ -81,9 +81,10 @@ const UserCard = ({ friend, user }) => {
                 ) : (
                     <button
                         onClick={() => sendFriendRequest(friend._id)}
-                        className="text-green-500 bg-green-700/30 border border-green-500/50 rounded p-1 flex items-center justify-center hover:bg-green-600/40"
+                        className="text-green-500 bg-green-700/30 border border-green-500/50 rounded p-1 flex items-center gap-2 justify-center duration-200 hover:bg-green-600/40"
                     >
                         <UserRoundPlus size={18} />
+                        <p className="text-sm">Add Friend</p>
                     </button>
                 )}
             </div>

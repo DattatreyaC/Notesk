@@ -5,14 +5,41 @@ import axiosInstance from "../utils/axiosInstance.js";
 const useFriendsStore = create((set, get) => ({
     userProfile: null,
     friends: [],
+    friendRequests: [], // incoming requests full docs
+
     outgoingRequests: [], // IDs of users you sent requests to
     incomingRequests: [], // IDs of users who sent you requests
     searchedUsers: [], // Users from search
     friendsLoading: false,
 
-    setFriends: (friends, received) => {
-        set({ friends: friends });
-        set({ incomingRequests: received });
+    getFriends: async () => {
+        try {
+            set({ friendsLoading: true });
+
+            const response = await axiosInstance.get("/users/friends");
+            if (response.status === 200) {
+                set({ friends: response.data.friends });
+            }
+        } catch (error) {
+            set({ friendRequests: [] });
+        } finally {
+            set({ friendsLoading: false });
+        }
+    },
+
+    getFriendRequests: async () => {
+        try {
+            set({ friendsLoading: true });
+
+            const response = await axiosInstance.get("/users/friendRequests");
+            if (response.status === 200) {
+                set({ friendRequests: response.data.requestsReceived });
+            }
+        } catch (error) {
+            set({ friendRequests: [] });
+        } finally {
+            set({ friendsLoading: false });
+        }
     },
 
     // Initialize requests from user object (call on login)
@@ -85,12 +112,24 @@ const useFriendsStore = create((set, get) => ({
     },
 
     removeFriend: async (id) => {
+        const previousFriends = get().friends;
+        const updatedFriends = previousFriends.filter((f) => f._id !== id);
+
+        set({ friends: updatedFriends });
+
         try {
             const response = await axiosInstance.post(
                 `/users/removeFriend/${id}`,
             );
-            if (response.status === 200) toast.success("Friend removed");
+
+            if (response.status === 200) {
+                toast.success("Friend removed");
+            } else {
+                set({ friends: previousFriends });
+                toast.error("Failed to remove friend");
+            }
         } catch (error) {
+            set({ friends: previousFriends });
             toast.error("Failed to remove friend");
         }
     },

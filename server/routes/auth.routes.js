@@ -12,6 +12,7 @@ import {
     updateProfile,
     forgotPassword,
     resetPassword,
+    verifyResetPasswordOtp,
 } from "../controllers/auth.controller.js";
 
 const router = express.Router();
@@ -35,6 +36,8 @@ router.get("/profiles", getAllProfiles);
 router.get("/profile", isLoggedIn, checkAuth);
 
 router.post("/forgot-password", forgotPassword);
+router.post("/resetPassword/verify-otp", verifyResetPasswordOtp);
+
 router.post("/reset-password", resetPassword);
 
 export default router;

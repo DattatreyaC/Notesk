@@ -97,7 +97,7 @@ const userSchema = new mongoose.Schema(
     },
 );
 
-userSchema.index({ otpExpires: 1 }, { expireAfterSeconds: 600 });
+// userSchema.index({ otpExpires: 1 }, { expireAfterSeconds: 600 });
 
 const User = mongoose.model("User", userSchema);
 

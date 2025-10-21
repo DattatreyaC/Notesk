@@ -7,7 +7,8 @@ import UserCard from "../components/friends-components/UserCard";
 
 const FriendsPage = () => {
     const { user, isCheckingAuth } = useAuthStore();
-    const { friends } = useFriendsStore();
+    const { friends, getFriends, friendRequests, getFriendRequests } =
+        useFriendsStore();
 
     const [displayedFriends, setDisplayedFriends] = useState([]);
     const { searchedUsers, friendsLoading } = useFriendsStore();
@@ -15,21 +16,22 @@ const FriendsPage = () => {
     const [searchValue, setSearchValue] = useState("");
     const [searchingNewFriend, setSearchingNewFriend] = useState(false);
 
+    const [activeTab, setActiveTab] = useState("Users");
+
     // Set friends safely on first render
     useEffect(() => {
-        if (user?.friends) {
-            setDisplayedFriends(friends);
-        }
-    }, [user]);
+        getFriends();
+        getFriendRequests();
+    }, []);
 
     useEffect(() => {
         if (!searchValue.trim()) {
-            setDisplayedFriends(user?.friends || []);
+            setDisplayedFriends(friends);
             return;
         }
 
         const filtered =
-            user?.friends?.filter(
+            friends.filter(
                 (f) =>
                     f?.username
                         ?.toLowerCase()
@@ -39,13 +41,13 @@ const FriendsPage = () => {
                         .includes(searchValue.toLowerCase()) ||
                     f?.lastname
                         ?.toLowerCase()
-                        .includes(searchValue.toLowerCase())
+                        .includes(searchValue.toLowerCase()),
             ) || [];
 
         setDisplayedFriends(filtered);
-    }, [searchValue, user]);
+    }, [searchValue, friends]);
 
-    if (isCheckingAuth || !user || !user.friends) {
+    if (isCheckingAuth || !user || !friends) {
         return (
             <div className="w-full h-screen flex items-center justify-center bg z-30">
                 <Loader />
@@ -58,7 +60,7 @@ const FriendsPage = () => {
         : displayedFriends;
 
     return (
-        <section className="bg w-full h-screen flex flex-col pl-12 p-3 overflow-y-auto relative overflow-x-hidden z-30">
+        <section className="bg w-full h-screen flex flex-col pl-20 p-10 overflow-y-auto relative overflow-x-hidden z-30">
             <FriendsHeader
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
@@ -66,7 +68,38 @@ const FriendsPage = () => {
                 setSearchingNewFriend={setSearchingNewFriend}
             />
 
-            <div className="w-full flex flex-wrap gap-4">
+            {/* Tabs */}
+            <div className="w-full border border-b-0 rounded-t px-2.5 py-1.5 bg-black/85 flex items-center gap-3 shadow-[2px_2px_5px_gray]">
+                <button
+                    onClick={() => {
+                        setActiveTab("Users");
+                        getFriends();
+                    }}
+                    className={` py-1 px-1.5 rounded font-semibold cursor-pointer duration-200 ${
+                        activeTab === "Users"
+                            ? "bg-neutral-200 text-black"
+                            : "hover:bg-white/30 bg-transparent text-white"
+                    }`}
+                >
+                    Users
+                </button>
+
+                <button
+                    onClick={() => {
+                        setActiveTab("Requests");
+                        getFriendRequests();
+                    }}
+                    className={` py-1 px-1.5 rounded font-semibold cursor-pointer duration-200 ${
+                        activeTab === "Requests"
+                            ? "bg-white text-black"
+                            : "hover:bg-white/30 bg-transparent text-white"
+                    }`}
+                >
+                    Friend Requests
+                </button>
+            </div>
+
+            <div className="w-full flex flex-wrap gap-4 border border-neutral-400 bg-neutral-300 rounded-b min-h-1/2 overflow-x-hidden overflow-y-auto py-8 px-3">
                 {friendsLoading && (
                     <span className="text-center flex w-full ">
                         <Loader />
@@ -74,6 +107,7 @@ const FriendsPage = () => {
                 )}
 
                 {!friendsLoading &&
+                    activeTab === "Users" &&
                     friendsToDisplay?.map((friend) => (
                         <UserCard
                             key={friend?._id || friend?.username} // safe key fallback
@@ -82,12 +116,30 @@ const FriendsPage = () => {
                         />
                     ))}
 
-                {!friendsToDisplay?.length && (
-                    <span className="text-center w-full mt-10 text-black/60">
+                {activeTab === "Users" && !friendsToDisplay?.length && (
+                    <p className="text-center w-full text-black/60 ">
                         {searchingNewFriend
                             ? "No users found. Double check the username."
                             : "No friends found. Click search to find new friends."}
-                    </span>
+                    </p>
+                )}
+
+                {activeTab === "Requests" && (
+                    <div className="w-full">
+                        {friendRequests.length === 0 && !friendsLoading ? (
+                            <p className="w-full h-full text-center place-content-center  text-neutral-700">
+                                No requests pending
+                            </p>
+                        ) : (
+                            friendRequests.map((f) => (
+                                <UserCard
+                                    key={f._id || f.username}
+                                    friend={f}
+                                    user={user}
+                                />
+                            ))
+                        )}
+                    </div>
                 )}
             </div>
         </section>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import useAuthStore from "../../store/useAuthStore";
 import Loader from "../Loader";
 import OtpModal from "../modals/OtpModal.jsx";
+import ForgotPasswordModal from "../modals/ForgotPasswordModal.jsx";
 
 const LoginComponent = () => {
     const { login, verifyOtp, requestOtp, isAuthLoading } = useAuthStore();
@@ -9,6 +10,8 @@ const LoginComponent = () => {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [errors, setErrors] = useState({});
     const [showOtpModal, setShowOtpModal] = useState(false);
+    const [showForgotPasswordModal, setShowForgotPasswordModal] =
+        useState(false);
 
     const validateForm = () => {
         const newErrors = {};
@@ -29,12 +32,6 @@ const LoginComponent = () => {
         if (!validateForm()) return;
 
         if (await requestOtp(formData, "login")) setShowOtpModal(true);
-    };
-
-    const handlePasswordReset = async (e) => {
-        e.preventDefault();
-
-        // if()
     };
 
     const handleOtpSubmit = async (otp) => {
@@ -78,7 +75,7 @@ const LoginComponent = () => {
 
                 <div>
                     <p
-                        onClick={handlePasswordReset}
+                        onClick={() => setShowForgotPasswordModal(true)}
                         className="underline mt-1 text-[15px] cursor-pointer text-black/70 hover:text-black duration-100"
                     >
                         Forgot Password
@@ -88,7 +85,7 @@ const LoginComponent = () => {
                 <button
                     type="submit"
                     disabled={isAuthLoading}
-                    className="w-full p-2.5 mt-4 border rounded font-semibold bg-black/40 hover:bg-black hover:text-white duration-200"
+                    className="w-full p-2.5 mt-4 border rounded font-semibold bg-black/50 hover:bg-black hover:text-white duration-200"
                 >
                     {isAuthLoading ? <Loader /> : "Login"}
                 </button>
@@ -98,6 +95,11 @@ const LoginComponent = () => {
                 isOpen={showOtpModal}
                 onClose={() => setShowOtpModal(false)}
                 onSubmit={handleOtpSubmit}
+            />
+
+            <ForgotPasswordModal
+                isOpen={showForgotPasswordModal}
+                onClose={() => setShowForgotPasswordModal(false)}
             />
         </>
     );
