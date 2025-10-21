@@ -62,6 +62,7 @@ export const verifyRegisterOtp = async (req, res) => {
         }
 
         user.isOtpVerified = true;
+        user.isEmailVerified = true;
         user.otp = undefined;
         user.otpExpires = undefined;
         await user.save();
@@ -119,6 +120,7 @@ export const verifyLoginOtp = async (req, res) => {
         }
 
         user.isOtpVerified = true;
+        user.isEmailVerified = true;
         user.otp = undefined;
         user.otpExpires = undefined;
         await user.save();

@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true,
         },
+        isEmailVerified: {
+            type: Boolean,
+            default: false,
+        },
         password: {
             type: String,
             required: true,
@@ -97,8 +101,13 @@ const userSchema = new mongoose.Schema(
     },
 );
 
-// userSchema.index({ otpExpires: 1 }, { expireAfterSeconds: 600 });
-
+userSchema.index(
+    { createdAt: 1 },
+    {
+        expireAfterSeconds: 20,
+        partialFilterExpression: { isEmailVerified: false },
+    },
+);
 const User = mongoose.model("User", userSchema);
 
 export default User;

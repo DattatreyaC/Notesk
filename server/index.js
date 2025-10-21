@@ -9,6 +9,7 @@ import taskRoutes from "./routes/task.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
+import User from "./models/User.js";
 dotenv.config();
 
 const app = express();
@@ -31,6 +32,8 @@ app.use("/api/note", noteRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
+// await User.syncIndexes();
 
 app.listen(port, () => {
     console.log(`App started on port ${port} : http://localhost:${port}`);
