@@ -50,7 +50,7 @@ const TaskCard = ({ task }) => {
         >
             {/* Header */}
             <div className="flex items-start justify-between">
-                <h3 className="text-lg font-semibold break-words pr-2">
+                <h3 className="text-lg font-semibold break-words pr-2 line-clamp-1">
                     {task.title}
                 </h3>
 
@@ -74,7 +74,7 @@ const TaskCard = ({ task }) => {
 
             {/* Description */}
             {task.description && (
-                <p className="text-sm line-clamp-2">{task.description}</p>
+                <p className="text-sm line-clamp-1">{task.description}</p>
             )}
 
             {/* Footer: Complete Checkbox */}

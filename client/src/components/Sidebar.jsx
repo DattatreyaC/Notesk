@@ -1,5 +1,6 @@
 import {
     CircleUserRound,
+    Compass,
     LayoutDashboard,
     ListTodo,
     LogOut,
@@ -110,6 +111,22 @@ const Sidebar = () => {
                             } transition-all duration-400`}
                         >
                             Dashboard
+                        </h4>
+                    </Link>
+
+                    <Link
+                        to={"/feed"}
+                        className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
+                    >
+                        <Compass className="text-white" />
+                        <h4
+                            className={`text-white ${
+                                sidebarOpen
+                                    ? "opacity-100"
+                                    : "opacity-0 absolute"
+                            } transition-all duration-400`}
+                        >
+                            Feed
                         </h4>
                     </Link>
 

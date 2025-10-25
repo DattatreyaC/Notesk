@@ -20,11 +20,11 @@ const DashboardTaskCard = ({ task }) => {
                     : "bg-gradient-to-r from-red-50 via-red-100 to-red-600 border-red-800"
             }`}
         >
-            <div>
-                <h1 className="text-2xl font-semibold text-black">
+            <div className="w-2/3">
+                <h1 className="text-2xl font-semibold text-black line-clamp-1">
                     {task.title}
                 </h1>
-                <p className="text-sm">{task.description}</p>
+                <p className="text-sm line-clamp-1">{task.description}</p>
             </div>
 
             <div className="flex items-center justify-end gap-5 w-1/3">

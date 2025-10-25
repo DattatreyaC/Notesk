@@ -49,7 +49,7 @@ export const deletePost = async (req, res) => {
         const id = req.params.id;
         const deletedPost = await Post.findByIdAndDelete(id);
         if (deletedPost) {
-            return res.status(201).json(deletedPost);
+            return res.status(200).json(deletedPost);
         } else {
             return res.status(404).json({ message: "Post not found" });
         }
@@ -242,6 +242,41 @@ export const unstarPostController = async (req, res) => {
         return res.status(200).json({ message: "Post unstarred" });
     } catch (error) {
         console.log(`Error in unstarPostController : ${error}`);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const getFeedPosts = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Fetch posts excluding the user's own posts
+        const feedPosts = await Post.find({ user: { $ne: req.user._id } })
+            .populate("user")
+            .sort({ createdAt: -1 }) // newest first
+            .limit(10); // only show 10 posts
+
+        res.status(200).json(feedPosts);
+    } catch (error) {
+        console.error("Error fetching feed posts:", error);
+        res.status(500).json({ message: "Failed to fetch feed" });
+    }
+};
+
+export const getPostById = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const post = await Post.findById(id).populate("user");
+        // .populate("comments");
+
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        return res.status(200).json(post);
+    } catch (error) {
+        console.log(`Error in getting post : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
     }
 };

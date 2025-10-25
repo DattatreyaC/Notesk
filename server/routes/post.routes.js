@@ -5,8 +5,10 @@ import {
     downvotePostController,
     editPost,
     getAllPosts,
+    getFeedPosts,
     getFriendsPosts,
     getMyPosts,
+    getPostById,
     getPostsOfUser,
     revertDownvoteController,
     revertUpvoteController,
@@ -22,7 +24,9 @@ router.post("/createPost", isLoggedIn, createPost);
 router.put("/editPost/:id", isLoggedIn, editPost);
 router.delete("/deletePost/:id", isLoggedIn, deletePost);
 
+router.get("/feed", isLoggedIn, getFeedPosts);
 router.get("/myPosts", isLoggedIn, getMyPosts);
+router.get("/:id", isLoggedIn, getPostById);
 router.get("/friendsPosts", isLoggedIn, getFriendsPosts);
 router.get("/posts-of-user/:id", isLoggedIn, getPostsOfUser);
 router.get("/getAllPosts", isLoggedIn, getAllPosts);

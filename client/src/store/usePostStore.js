@@ -1,18 +1,29 @@
 import { create } from "zustand";
+import { toast } from "react-hot-toast";
 import axiosInstance from "../utils/axiosInstance";
 
 const usePostStore = create((set) => ({
+    post: null,
     myPosts: [],
-    postsLoading: false,
+    feedPosts: [],
+    isFeedLoading: false,
+    isPostsLoading: false,
 
+    // Fetch user's posts
     fetchMyPosts: async () => {
+        set({ isPostsLoading: true });
+
         try {
-            set({ postsLoading: true });
             const response = await axiosInstance.get("/posts/myPosts");
-            if (response) {
+
+            if (response.status === 200) {
                 set({ myPosts: response.data });
+            } else {
+                set({ myPosts: [] });
             }
         } catch (error) {
+            console.error("Error fetching posts:", error);
+
             set({ myPosts: [] });
 
             toast.error("Unable to load posts", {
@@ -27,6 +38,147 @@ const usePostStore = create((set) => ({
                     secondary: "red",
                 },
             });
+        } finally {
+            set({ isPostsLoading: false });
+        }
+    },
+
+    fetchPostById: async (id) => {
+        try {
+            set({ isPostsLoading: true });
+
+            const response = await axiosInstance.get(`/posts/${id}`);
+
+            if (response.status === 200) {
+                set({ post: response.data });
+            } else {
+                set({ post: [] });
+            }
+        } catch (error) {
+            set({ post: [] });
+        } finally {
+            set({ isPostsLoading: false });
+        }
+    },
+
+    // Fetch feed posts
+    fetchFeedPosts: async () => {
+        try {
+            set({ isFeedLoading: true });
+
+            const response = await axiosInstance.get("/posts/feed");
+
+            if (response.status === 200) {
+                set({ feedPosts: response.data });
+            } else {
+                set({ feedPosts: [] });
+            }
+        } catch (error) {
+            set({ feedPosts: [] });
+        } finally {
+            set({ isFeedLoading: false });
+        }
+    },
+
+    // Create a new post
+    createPost: async (payload) => {
+        set({ postsLoading: true });
+
+        try {
+            const response = await axiosInstance.post(
+                "/posts/createPost",
+                payload,
+            );
+            if (response.status === 201) {
+                set((state) => ({
+                    myPosts: [response.data, ...state.myPosts],
+                }));
+
+                toast.success("Post Created", {
+                    style: {
+                        border: "1px solid green",
+                        padding: "12px",
+                        color: "black",
+                        background: "rgba(0,130,0,0.8)",
+                    },
+                    iconTheme: {
+                        primary: "black",
+                        secondary: "green",
+                    },
+                });
+
+                return true;
+            }
+        } catch (error) {
+            console.error("Error creating post:", error);
+
+            toast.error("Failed to create post", {
+                style: {
+                    border: "1px solid red",
+                    padding: "12px",
+                    color: "white",
+                    background: "rgba(100,0,0,0.8)",
+                },
+                iconTheme: {
+                    primary: "white",
+                    secondary: "red",
+                },
+            });
+
+            return false;
+        } finally {
+            set({ postsLoading: false });
+        }
+    },
+
+    deletePost: async (id) => {
+        set({ postsLoading: true });
+
+        try {
+            const response = await axiosInstance.delete(
+                `/posts/deletePost/${id}`,
+            );
+
+            if (response.status === 200 || response.status === 204) {
+                // Remove the deleted post from local store
+                set((state) => ({
+                    myPosts: state.myPosts.filter((post) => post._id !== id),
+                }));
+
+                toast.success("Post deleted", {
+                    style: {
+                        border: "1px solid green",
+                        padding: "12px",
+                        color: "black",
+                        background: "rgba(0,130,0,0.8)",
+                    },
+                    iconTheme: {
+                        primary: "black",
+                        secondary: "green",
+                    },
+                });
+
+                return true;
+            } else {
+                throw new Error("Unexpected response status");
+            }
+        } catch (error) {
+            console.error("Error deleting post:", error);
+
+            toast.error("Failed to delete post", {
+                style: {
+                    border: "1px solid red",
+                    padding: "12px",
+                    color: "white",
+                    background: "rgba(100,0,0,0.8)",
+                },
+                iconTheme: {
+                    primary: "white",
+                    secondary: "red",
+                },
+            });
+
+            return false;
         } finally {
             set({ postsLoading: false });
         }

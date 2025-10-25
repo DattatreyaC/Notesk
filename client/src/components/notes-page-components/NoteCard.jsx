@@ -41,7 +41,7 @@ const NoteCard = ({ note }) => {
         >
             {/* title */}
             <div className="w-full font-semibold text-xl p-1.5 pb-0 relative flex items-center">
-                {note.title}
+                <h1 className="line-clamp-1">{note.title}</h1>
 
                 <span
                     onClick={(e) => {

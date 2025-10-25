@@ -6,10 +6,13 @@ import {
     Star,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
+import usePostStore from "../../store/usePostStore";
 
 const PostCard = ({ post, onEdit, onDelete }) => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
+
+    const { deletePost, isPostsLoading } = usePostStore();
 
     useEffect(() => {
         function handleClickOutside(e) {
@@ -99,7 +102,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                     <button
                         onClick={() => {
                             setIsOpen(false);
-                            onDelete?.(post._id);
+                            deletePost(post._id);
                         }}
                         className="w-full text-left px-3 py-2 hover:bg-red-500/20 text-red-400"
                     >

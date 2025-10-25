@@ -10,10 +10,7 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        isPublic: {
-            type: Boolean,
-            default: true,
-        },
+
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

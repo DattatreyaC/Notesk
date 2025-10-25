@@ -104,7 +104,7 @@ const userSchema = new mongoose.Schema(
 userSchema.index(
     { createdAt: 1 },
     {
-        expireAfterSeconds: 20,
+        expireAfterSeconds: 600,
         partialFilterExpression: { isEmailVerified: false },
     },
 );

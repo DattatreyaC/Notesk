@@ -15,6 +15,8 @@ import PostsPage from "./pages/PostsPage.jsx";
 import FriendsPage from "./pages/FriendsPage.jsx";
 import TasksPage from "./pages/TasksPage.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
+import Feed from "./pages/Feed.jsx";
+import PostViewPage from "./pages/PostViewPage.jsx";
 
 const App = () => {
     const { user, checkAuth, isCheckingAuth } = useAuthStore();
@@ -47,6 +49,11 @@ const App = () => {
                     }
                 ></Route>
                 <Route
+                    path="/feed"
+                    element={user ? <Feed /> : <LandingPage />}
+                ></Route>
+
+                <Route
                     path="/dashboard"
                     element={user ? <Dashboard /> : <LandingPage />}
                 ></Route>
@@ -61,6 +68,10 @@ const App = () => {
                 <Route
                     path="/posts"
                     element={user ? <PostsPage /> : <LandingPage />}
+                ></Route>
+                <Route
+                    path="/post/:id"
+                    element={user ? <PostViewPage /> : <LandingPage />}
                 ></Route>
                 <Route
                     path="/friends"
