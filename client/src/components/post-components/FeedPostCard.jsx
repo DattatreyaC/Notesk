@@ -4,6 +4,9 @@ import {
     Dot,
     MessageSquareQuote,
 } from "lucide-react";
+
+import { FaRegStar } from "react-icons/fa";
+
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -48,6 +51,18 @@ const FeedPostCard = ({ post }) => {
                         {calculateDay()}
                     </span>
                 </div>
+
+                <div>
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
+                        className="p-1 text-xl hover:bg-neutral-400/30 duration-100 cursor-pointer rounded-lg"
+                    >
+                        <FaRegStar className="" />
+                    </button>
+                </div>
             </header>
 
             {/* Post content */}
@@ -66,14 +81,20 @@ const FeedPostCard = ({ post }) => {
                 <div className="flex items-center bg-neutral-800/50 border border-neutral-700 rounded-full overflow-hidden">
                     <button
                         className="flex items-center gap-1 px-2 py-1 hover:bg-emerald-600/70 transition "
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
                     >
                         <ArrowBigUp size={18} />
                         <span className="text-sm">{post.upvotes}</span>
                     </button>
                     <button
                         className="flex items-center gap-1 px-2 py-1 hover:bg-rose-600/70 transition"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
                     >
                         <ArrowBigDown size={18} />
                     </button>

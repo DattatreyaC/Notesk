@@ -23,10 +23,13 @@ const postSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        stars: {
-            type: Number,
-            default: 0,
-        },
+        stars: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+                default: [],
+            },
+        ],
         comments: [
             {
                 type: mongoose.Schema.Types.ObjectId,

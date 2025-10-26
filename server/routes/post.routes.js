@@ -35,7 +35,7 @@ router.post("/post/upvote/:id", isLoggedIn, upvotePostController);
 router.post("/post/unupvote/:id", isLoggedIn, revertUpvoteController);
 router.post("/post/downvote/:id", isLoggedIn, downvotePostController);
 router.post("/post/undownvote/:id", isLoggedIn, revertDownvoteController);
-router.post("/post/star/:id", starPostController);
-router.post("/post/unstar/:id", unstarPostController);
+router.post("/post/star/:id", isLoggedIn, starPostController);
+router.post("/post/unstar/:id", isLoggedIn, unstarPostController);
 
 export default router;

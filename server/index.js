@@ -33,7 +33,7 @@ app.use("/api/tasks", taskRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-// await User.syncIndexes();
+await User.syncIndexes();
 
 app.listen(port, () => {
     console.log(`App started on port ${port} : http://localhost:${port}`);

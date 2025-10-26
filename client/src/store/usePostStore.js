@@ -183,6 +183,12 @@ const usePostStore = create((set) => ({
             set({ postsLoading: false });
         }
     },
+
+    starPost: async (id) => {
+        try {
+            const response = await axiosInstance.post(`/post/star/${id}`);
+        } catch (error) {}
+    },
 }));
 
 export default usePostStore;

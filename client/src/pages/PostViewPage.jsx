@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import usePostStore from "../store/usePostStore";
 import { ArrowBigUp, ArrowBigDown, MessageSquareQuote } from "lucide-react";
+import { FaRegStar } from "react-icons/fa";
 
 const PostViewPage = () => {
     const { id } = useParams();
@@ -68,6 +69,12 @@ const PostViewPage = () => {
                             <span className="text-xs text-neutral-500">
                                 {calculateDay()}
                             </span>
+                        </div>
+
+                        <div>
+                            <button className="p-1 text-xl hover:bg-neutral-400/30 duration-100 cursor-pointer rounded-lg">
+                                <FaRegStar className="" />
+                            </button>
                         </div>
                     </header>
 

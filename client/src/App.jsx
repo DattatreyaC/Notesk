@@ -24,8 +24,15 @@ const App = () => {
     const { modalOpen } = useModalStore();
 
     useEffect(() => {
-        checkAuth();
+        const auth = async () => {
+            await checkAuth();
+        };
+        auth();
     }, []);
+
+    if (user) {
+        console.log(user);
+    }
 
     if (isCheckingAuth && !user) {
         return (

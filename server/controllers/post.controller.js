@@ -1,5 +1,6 @@
 import Post from "../models/Post.js";
 import post from "../models/Post.js";
+import User from "../models/User.js";
 
 export const createPost = async (req, res) => {
     try {
@@ -207,6 +208,7 @@ export const starPostController = async (req, res) => {
         const id = req.params.id;
 
         const post = await Post.findById(id);
+
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
@@ -216,6 +218,15 @@ export const starPostController = async (req, res) => {
                 .status(400)
                 .json({ message: "You have already starred this post" });
         }
+
+        post.stars.push(req.user._id);
+        post.save();
+
+        const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+            $push: {
+                starredPosts: post._id,
+            },
+        });
 
         return res.status(200).json({ message: "Post starred" });
     } catch (error) {
@@ -238,6 +249,17 @@ export const unstarPostController = async (req, res) => {
                 .status(400)
                 .json({ message: "You do not have that post starred" });
         }
+
+        post.stars = post.stars.filter(
+            (starId) => starId.toString() !== req.user._id.toString(),
+        );
+        post.save();
+
+        const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+            $pull: {
+                starredPosts: post._id,
+            },
+        });
 
         return res.status(200).json({ message: "Post unstarred" });
     } catch (error) {
