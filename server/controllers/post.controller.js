@@ -213,11 +213,11 @@ export const starPostController = async (req, res) => {
             return res.status(404).json({ message: "Post not found" });
         }
 
-        if (post.stars.includes(req.user._id)) {
-            return res
-                .status(400)
-                .json({ message: "You have already starred this post" });
-        }
+        // if (post.stars.includes(req.user._id)) {
+        //     return res
+        //         .status(400)
+        //         .json({ message: "You have already starred this post" });
+        // }
 
         post.stars.push(req.user._id);
         post.save();
@@ -244,11 +244,11 @@ export const unstarPostController = async (req, res) => {
             return res.status(404).json({ message: "Post not found" });
         }
 
-        if (!post.stars.includes(req.user._id)) {
-            return res
-                .status(400)
-                .json({ message: "You do not have that post starred" });
-        }
+        // if (!post.stars.includes(req.user._id)) {
+        //     return res
+        //         .status(400)
+        //         .json({ message: "You do not have that post starred" });
+        // }
 
         post.stars = post.stars.filter(
             (starId) => starId.toString() !== req.user._id.toString(),

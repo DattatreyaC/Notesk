@@ -2,11 +2,25 @@ import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import usePostStore from "../store/usePostStore";
 import { ArrowBigUp, ArrowBigDown, MessageSquareQuote } from "lucide-react";
+import { FaStar } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
+import useAuthStore from "../store/useAuthStore";
+import { useState } from "react";
 
 const PostViewPage = () => {
     const { id } = useParams();
-    const { fetchPostById, isPostsLoading, post } = usePostStore();
+
+    const {
+        fetchPostById,
+        isPostsLoading,
+        post,
+        starPost,
+        unStarPost,
+        starredPosts,
+    } = usePostStore();
+    const { user } = useAuthStore();
+
+    const [isStarred, setIsStarred] = useState(starredPosts.includes(id));
 
     const calculateDay = () => {
         const date = new Date(post.createdAt);
@@ -27,6 +41,16 @@ const PostViewPage = () => {
             return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""} ago`;
 
         return "just now";
+    };
+
+    const handleStar = async () => {
+        const success = await starPost(post._id);
+        if (success) setIsStarred(true);
+    };
+
+    const handleUnStar = async () => {
+        const success = await unStarPost(post._id);
+        if (success) setIsStarred(false);
     };
 
     useEffect(() => {
@@ -72,8 +96,19 @@ const PostViewPage = () => {
                         </div>
 
                         <div>
-                            <button className="p-1 text-xl hover:bg-neutral-400/30 duration-100 cursor-pointer rounded-lg">
-                                <FaRegStar className="" />
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    isStarred ? handleUnStar() : handleStar();
+                                }}
+                                className="p-1 text-xl hover:bg-neutral-400/30 duration-100 cursor-pointer rounded-lg"
+                            >
+                                {isStarred ? (
+                                    <FaStar className="text-amber-500" />
+                                ) : (
+                                    <FaRegStar className="text-neutral-400" />
+                                )}
                             </button>
                         </div>
                     </header>

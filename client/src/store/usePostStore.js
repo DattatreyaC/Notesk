@@ -5,6 +5,7 @@ import axiosInstance from "../utils/axiosInstance";
 const usePostStore = create((set) => ({
     post: null,
     myPosts: [],
+    starredPosts: [],
     feedPosts: [],
     isFeedLoading: false,
     isPostsLoading: false,
@@ -41,6 +42,10 @@ const usePostStore = create((set) => ({
         } finally {
             set({ isPostsLoading: false });
         }
+    },
+
+    setStarredPosts: (posts) => {
+        set({ starredPosts: posts });
     },
 
     fetchPostById: async (id) => {
@@ -184,10 +189,68 @@ const usePostStore = create((set) => ({
         }
     },
 
-    starPost: async (id) => {
+    starPost: async (postId) => {
         try {
-            const response = await axiosInstance.post(`/post/star/${id}`);
-        } catch (error) {}
+            const response = await axiosInstance.post(
+                `/posts/post/star/${postId}`,
+            );
+
+            if (response.status === 200) {
+                set((state) => ({
+                    starredPosts: [...state.starredPosts, postId],
+                }));
+
+                return true;
+            }
+        } catch (error) {
+            toast.error("Could not star. Please try again", {
+                style: {
+                    border: "1px solid red",
+                    padding: "12px",
+                    color: "white",
+                    background: "rgba(100,0,0,0.8)",
+                },
+                iconTheme: {
+                    primary: "white",
+                    secondary: "red",
+                },
+            });
+
+            return false;
+        }
+    },
+
+    unStarPost: async (postId) => {
+        try {
+            const response = await axiosInstance.post(
+                `/posts/post/unstar/${postId}`,
+            );
+            if (response.status === 200) {
+                set((state) => ({
+                    starredPosts: state.starredPosts.filter(
+                        (id) => id !== postId,
+                    ),
+                }));
+
+                return true;
+            }
+        } catch (error) {
+            toast.error("Failed to remove star. Please try again", {
+                style: {
+                    border: "1px solid red",
+                    padding: "12px",
+                    color: "white",
+                    background: "rgba(100,0,0,0.8)",
+                },
+                iconTheme: {
+                    primary: "white",
+                    secondary: "red",
+                },
+            });
+            console.log(error);
+
+            return false;
+        }
     },
 }));
 

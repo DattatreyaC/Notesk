@@ -1,13 +1,22 @@
 import React, { useEffect } from "react";
 import usePostStore from "../store/usePostStore";
 import FeedPostCard from "../components/post-components/FeedPostCard";
+import useAuthStore from "../store/useAuthStore";
 
 const Feed = () => {
-    const { feedPosts, fetchFeedPosts, isFeedLoading } = usePostStore();
+    const {
+        feedPosts,
+        starredPosts,
+        setStarredPosts,
+        fetchFeedPosts,
+        isFeedLoading,
+    } = usePostStore();
+    const { user } = useAuthStore();
 
     useEffect(() => {
         fetchFeedPosts();
-    }, [fetchFeedPosts]);
+        setStarredPosts(user.starredPosts);
+    }, []);
 
     return (
         <section className="bg w-full h-screen flex flex-col pl-12 py-5 pr-1 overflow-y-auto relative overflow-x-hidden z-30">

@@ -4,13 +4,19 @@ import {
     Dot,
     MessageSquareQuote,
 } from "lucide-react";
-
 import { FaRegStar } from "react-icons/fa";
-
-import React from "react";
+import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import useAuthStore from "../../store/useAuthStore.js";
+import usePostStore from "../../store/usePostStore";
 
 const FeedPostCard = ({ post }) => {
+    const { user } = useAuthStore();
+    const { starPost, unStarPost, starredPosts } = usePostStore();
+
+    const [isStarred, setIsStarred] = useState(starredPosts.includes(post._id));
+
     const calculateDay = () => {
         const date = new Date(post.createdAt);
 
@@ -30,6 +36,20 @@ const FeedPostCard = ({ post }) => {
             return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""} ago`;
 
         return "just now";
+    };
+
+    const handleStar = async () => {
+        const success = await starPost(post._id);
+        if (success) {
+            setIsStarred(true);
+        }
+    };
+
+    const handleUnStar = async () => {
+        const success = await unStarPost(post._id);
+        if (success) {
+            setIsStarred(false);
+        }
     };
 
     return (
@@ -57,10 +77,18 @@ const FeedPostCard = ({ post }) => {
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+
+                            isStarred ? handleUnStar() : handleStar();
                         }}
                         className="p-1 text-xl hover:bg-neutral-400/30 duration-100 cursor-pointer rounded-lg"
                     >
-                        <FaRegStar className="" />
+                        {isStarred ? (
+                            <FaStar
+                                className={`${isStarred && " fill-amber-500"}`}
+                            />
+                        ) : (
+                            <FaRegStar />
+                        )}
                     </button>
                 </div>
             </header>
