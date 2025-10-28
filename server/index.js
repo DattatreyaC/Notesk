@@ -9,6 +9,7 @@ import taskRoutes from "./routes/task.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
+import cloudinary from "./utils/cloudinary.js";
 import User from "./models/User.js";
 dotenv.config();
 
@@ -33,8 +34,8 @@ app.use("/api/tasks", taskRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
-await User.syncIndexes();
-
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`App started on port ${port} : http://localhost:${port}`);
+    await User.syncIndexes();
+    // console.log(cloudinary.config());
 });

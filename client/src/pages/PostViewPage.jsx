@@ -4,8 +4,8 @@ import usePostStore from "../store/usePostStore";
 import { ArrowBigUp, ArrowBigDown, MessageSquareQuote } from "lucide-react";
 import { FaStar } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
-import useAuthStore from "../store/useAuthStore";
 import { useState } from "react";
+import Loader from "../components/Loader";
 
 const PostViewPage = () => {
     const { id } = useParams();
@@ -18,7 +18,6 @@ const PostViewPage = () => {
         unStarPost,
         starredPosts,
     } = usePostStore();
-    const { user } = useAuthStore();
 
     const [isStarred, setIsStarred] = useState(starredPosts.includes(id));
 
@@ -60,9 +59,13 @@ const PostViewPage = () => {
     if (isPostsLoading) {
         return (
             <section className="bg w-full h-screen flex items-center justify-center pl-12 py-5 pr-1 overflow-y-auto relative overflow-x-hidden z-30">
-                <p className="text-neutral-400 text-lg font-medium animate-pulse">
-                    Loading post...
-                </p>
+                <div className="w-full h-fit space-y-3 text-center">
+                    <Loader />
+                    <span>
+                        <p className="font-semibold text-xl">Loading post.</p>
+                        <p className="">Please wait...</p>
+                    </span>
+                </div>
             </section>
         );
     }

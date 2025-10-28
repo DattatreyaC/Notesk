@@ -6,6 +6,7 @@ import {
     sendLoginMail,
     sendResetPasswordMail,
 } from "../utils/nodemailer.js";
+import uploadOnCloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
     try {
@@ -149,21 +150,40 @@ export const updateProfile = async (req, res) => {
     try {
         const { username, firstname, lastname } = req.body;
 
-        const updatedUser = await User.findByIdAndUpdate(
-            req.user.id,
-            {
-                firstname,
-                lastname,
-                username,
-            },
-            { new: true },
-        );
+        let uploadedPicture = "";
 
-        if (!updatedUser) {
-            return res.status(400).json({ message: "Whoops" });
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
 
-        res.status(200).json(updatedUser);
+        if (firstname) user.firstname = firstname;
+        if (lastname) user.lastname = lastname;
+        if (username) user.username = username;
+
+        if (req.file) {
+            uploadedPicture = await uploadOnCloudinary(
+                req.file.path,
+                req.user._id,
+            );
+
+            if (uploadedPicture) {
+                if (user.profilePicture?.public_id) {
+                    await cloudinary.uploader.destroy(
+                        user.profilePicture?.public_id,
+                    );
+                }
+
+                user.profilePicture = uploadedPicture;
+
+                await user.save();
+            }
+        }
+
+        await user.save();
+
+        res.status(200).json(user);
     } catch (error) {
         console.log(`Error in updateProfile controller : ${error}`);
         return res.status(500).json({ message: "Internal server error" });

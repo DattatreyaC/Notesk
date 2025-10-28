@@ -1,16 +1,52 @@
 import Post from "../models/Post.js";
 import post from "../models/Post.js";
 import User from "../models/User.js";
+import uploadOnCloudinary from "../utils/cloudinary.js";
 
 export const createPost = async (req, res) => {
     try {
         const { title, content } = req.body;
+
+        if (!title || !content) {
+            return res.status(400).json({ message: "Fill all fields" });
+        }
+
+        const mediaFiles = [];
+
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const uploadedFile = await uploadOnCloudinary(
+                    file.path,
+                    req.user._id,
+                );
+
+                if (uploadedFile) {
+                    const fileType = file.mimetype.startsWith("video")
+                        ? "video"
+                        : "image";
+
+                    mediaFiles.push({
+                        url: uploadedFile.url,
+                        public_id: uploadedFile.public_id,
+                        type: fileType,
+                    });
+                }
+            }
+        }
+
         const createdPost = await Post.create({
             title,
             content,
             user: req.user._id,
+            media: mediaFiles,
         });
+
         if (createdPost) {
+            const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+                $push: {
+                    posts: createdPost._id,
+                },
+            });
             return res.status(201).json(createdPost);
         }
     } catch (error) {
@@ -47,19 +83,46 @@ export const editPost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
     try {
-        const id = req.params.id;
-        const deletedPost = await Post.findByIdAndDelete(id);
-        if (deletedPost) {
-            return res.status(200).json(deletedPost);
-        } else {
+        const { id } = req.params;
+
+        const post = await Post.findById(id);
+        if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
+
+        if (post.user.toString() !== req.user._id.toString()) {
+            return res
+                .status(401)
+                .json({ message: "Unauthorized to delete this post" });
+        }
+
+        for (const file of post.media) {
+            try {
+                await cloudinary.uploader.destroy(file.public_id, {
+                    resource_type: file.type,
+                });
+            } catch (err) {
+                console.error(
+                    `Failed to delete file from Cloudinary: ${err.message}`,
+                );
+            }
+        }
+
+        await post.deleteOne();
+
+        await User.findByIdAndUpdate(req.user._id, {
+            $pull: { posts: post._id },
+        });
+
+        return res.status(200).json({
+            message: "Post deleted successfully",
+            deletedPostId: post._id,
+        });
     } catch (error) {
-        console.log(`Error in deletePost controller : ${error}`);
+        console.error(`Error in deletePost controller: ${error}`);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
-
 export const getMyPosts = async (req, res) => {
     try {
         const myPosts = await Post.find({ user: req.user._id })

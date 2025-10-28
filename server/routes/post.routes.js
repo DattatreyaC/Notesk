@@ -17,10 +17,11 @@ import {
     upvotePostController,
 } from "../controllers/post.controller.js";
 import isLoggedIn from "../middlewares/isLoggedIn.js";
+import { upload } from "../middlewares/multer.js";
 
 const router = express.Router();
 
-router.post("/createPost", isLoggedIn, createPost);
+router.post("/createPost", isLoggedIn, upload.array("media", 3), createPost);
 router.put("/editPost/:id", isLoggedIn, editPost);
 router.delete("/deletePost/:id", isLoggedIn, deletePost);
 

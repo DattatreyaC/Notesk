@@ -69,7 +69,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                     {post.downvotes}
                 </div>
                 <div className="flex gap-1 text-sm items-center">
-                    <Star size={20} strokeWidth={1.5} /> {post.stars}
+                    <Star size={20} strokeWidth={1.5} /> {post.stars?.length}
                 </div>
                 <div className="flex gap-1 text-sm items-center">
                     <MessageSquareText size={20} strokeWidth={1.5} />{" "}

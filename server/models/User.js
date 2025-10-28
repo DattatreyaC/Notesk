@@ -28,7 +28,6 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-
         requestsReceived: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -36,7 +35,6 @@ const userSchema = new mongoose.Schema(
                 default: [],
             },
         ],
-
         requestsSent: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -44,7 +42,6 @@ const userSchema = new mongoose.Schema(
                 default: [],
             },
         ],
-
         friends: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -52,7 +49,6 @@ const userSchema = new mongoose.Schema(
                 default: [],
             },
         ],
-
         notes: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -60,7 +56,6 @@ const userSchema = new mongoose.Schema(
                 default: [],
             },
         ],
-
         posts: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -68,7 +63,6 @@ const userSchema = new mongoose.Schema(
                 default: [],
             },
         ],
-
         starredPosts: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -76,7 +70,6 @@ const userSchema = new mongoose.Schema(
                 default: [],
             },
         ],
-
         tasks: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -84,7 +77,6 @@ const userSchema = new mongoose.Schema(
                 default: [],
             },
         ],
-
         otp: {
             type: String,
         },
@@ -94,6 +86,10 @@ const userSchema = new mongoose.Schema(
         isOtpVerified: {
             type: Boolean,
             default: false,
+        },
+        profilePicture: {
+            url: String,
+            public_id: String,
         },
     },
     {

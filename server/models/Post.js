@@ -10,6 +10,17 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        media: [
+            {
+                url: { type: String, required: true },
+                public_id: { type: String, required: true },
+                type: {
+                    type: String,
+                    enum: ["image", "video"],
+                    required: true,
+                },
+            },
+        ],
 
         user: {
             type: mongoose.Schema.Types.ObjectId,

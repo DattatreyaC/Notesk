@@ -57,10 +57,10 @@ const usePostStore = create((set) => ({
             if (response.status === 200) {
                 set({ post: response.data });
             } else {
-                set({ post: [] });
+                set({ post: null });
             }
         } catch (error) {
-            set({ post: [] });
+            set({ post: null });
         } finally {
             set({ isPostsLoading: false });
         }

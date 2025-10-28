@@ -14,6 +14,7 @@ import {
     resetPassword,
     verifyResetPasswordOtp,
 } from "../controllers/auth.controller.js";
+import { upload } from "../middlewares/multer.js";
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.post("/login/verify-otp", verifyLoginOtp);
 
 router.post("/logout", isLoggedIn, logout);
 
-router.put("/update", isLoggedIn, updateProfile);
+router.put("/update", isLoggedIn, upload.single("avatar"), updateProfile);
 
 router.delete("/delete", isLoggedIn, deleteProfile);
 
