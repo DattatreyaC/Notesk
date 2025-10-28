@@ -52,7 +52,7 @@ const Sidebar = () => {
                 // onMouseLeave={() => setSidebarOpen(false)}
                 className={`h-screen ${
                     sidebarOpen
-                        ? "w-[50%] sm:w-[40%] md:w-[25%] lg:w-[18%]"
+                        ? "w-[50%] sm:w-[40%] md:w-[30%] lg:w-[25%] xl:w-[18%]"
                         : "w-11"
                 }  border bg-black transition-all duration-300 ease-out fixed flex flex-col px-1 shadow-[0_0_10px_black] z-40 border-r border-r-neutral-100/50`}
             >
@@ -84,8 +84,19 @@ const Sidebar = () => {
 
                 {/* SIDEBAR MENU */}
                 <div className="flex flex-col gap-3 mt-20  border-white">
-                    <div className="w-full  border-white text-white flex items-center gap-3 border-b">
-                        <CircleUserRound size={50} strokeWidth={1.5} />
+                    <div className="w-full  border-white text-white flex flex-col sm:flex-row items-center gap-1 sm:gap-3 border-b pb-1">
+                        {user.profilePicture?.url ? (
+                            <img
+                                src={user.profilePicture.url}
+                                alt="profile picture"
+                                className={`border-2 border-neutral-500 rounded-full p-0.5 object-cover ${
+                                    sidebarOpen ? "size-18" : "size-10"
+                                }`}
+                            />
+                        ) : (
+                            <CircleUserRound size={50} strokeWidth={1.5} />
+                        )}
+
                         <span
                             className={`${
                                 sidebarOpen

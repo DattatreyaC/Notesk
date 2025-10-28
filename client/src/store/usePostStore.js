@@ -87,13 +87,30 @@ const usePostStore = create((set) => ({
 
     // Create a new post
     createPost: async (payload) => {
-        set({ postsLoading: true });
+        set({ isPostsLoading: true });
 
         try {
+            const formData = new FormData();
+            formData.append("title", payload.title);
+            formData.append("content", payload.content);
+
+            if (payload.media && payload.media.length > 0) {
+                payload.media.forEach((file) => {
+                    formData.append("media", file);
+                });
+            }
+
+            // ✅ Send multipart/form-data request
             const response = await axiosInstance.post(
                 "/posts/createPost",
-                payload,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                },
             );
+
             if (response.status === 201) {
                 set((state) => ({
                     myPosts: [response.data, ...state.myPosts],
@@ -132,7 +149,7 @@ const usePostStore = create((set) => ({
 
             return false;
         } finally {
-            set({ postsLoading: false });
+            set({ isPostsLoading: false });
         }
     },
 

@@ -1,15 +1,15 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
-const uploadOnCloudinary = async (file, id) => {
-    try {
-        cloudinary.config({
-            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-            api_key: process.env.CLOUDINARY_API_KEY,
-            api_secret: process.env.CLOUDINARY_API_SECRET,
-            secure: true,
-        });
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    secure: true,
+});
 
+export const uploadOnCloudinary = async (file, id) => {
+    try {
         const result = await cloudinary.uploader.upload(file, {
             resource_type: "auto",
             folder: `Notesk/${id}`,
@@ -27,4 +27,8 @@ const uploadOnCloudinary = async (file, id) => {
     }
 };
 
-export default uploadOnCloudinary;
+export const deleteFromCloudinary = async (fileId, type) => {
+    try {
+        const result = await cloudinary.uploader.destroy(fileId);
+    } catch (error) {}
+};

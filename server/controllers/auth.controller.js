@@ -6,7 +6,10 @@ import {
     sendLoginMail,
     sendResetPasswordMail,
 } from "../utils/nodemailer.js";
-import uploadOnCloudinary from "../utils/cloudinary.js";
+import {
+    uploadOnCloudinary,
+    deleteFromCloudinary,
+} from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
     try {
@@ -170,9 +173,7 @@ export const updateProfile = async (req, res) => {
 
             if (uploadedPicture) {
                 if (user.profilePicture?.public_id) {
-                    await cloudinary.uploader.destroy(
-                        user.profilePicture?.public_id,
-                    );
+                    deleteFromCloudinary(user.profilePicture.public_id);
                 }
 
                 user.profilePicture = uploadedPicture;

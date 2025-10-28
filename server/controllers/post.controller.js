@@ -1,7 +1,9 @@
 import Post from "../models/Post.js";
-import post from "../models/Post.js";
 import User from "../models/User.js";
-import uploadOnCloudinary from "../utils/cloudinary.js";
+import {
+    uploadOnCloudinary,
+    deleteFromCloudinary,
+} from "../utils/cloudinary.js";
 
 export const createPost = async (req, res) => {
     try {
@@ -98,9 +100,10 @@ export const deletePost = async (req, res) => {
 
         for (const file of post.media) {
             try {
-                await cloudinary.uploader.destroy(file.public_id, {
-                    resource_type: file.type,
-                });
+                // await cloudinary.uploader.destroy(file.public_id, {
+                //     resource_type: file.type,
+                // });
+                deleteFromCloudinary(file.public_id);
             } catch (err) {
                 console.error(
                     `Failed to delete file from Cloudinary: ${err.message}`,
