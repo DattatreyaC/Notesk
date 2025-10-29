@@ -33,7 +33,6 @@ const Feed = () => {
                     className="
                         flex flex-col gap-6
                         w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl
-                        xl:max-w-5xl
                         md:px-4
                         transition-all duration-200
                     "

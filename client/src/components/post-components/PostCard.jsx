@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import usePostStore from "../../store/usePostStore";
+import MediaCarousel from "../MediaCarousel";
 
 const PostCard = ({ post, onEdit, onDelete }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -27,10 +28,10 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     }, []);
 
     return (
-        <div className="max-w-sm w-full bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative">
+        <div className="max-w-lg w-full bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative">
             {/* Title + Menu Button */}
             <div className="w-full flex items-center justify-between">
-                <h2 className="text-xl md:text-2xl font-semibold text-white">
+                <h2 className="text-xl md:text-2xl font-semibold text-white line-clamp-1">
                     {post.title}
                 </h2>
 
@@ -45,11 +46,18 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 </button>
             </div>
 
+            {/* MEDIA Carousel */}
+            {post.media?.length > 0 && (
+                <div className="w-full rounded-md">
+                    <MediaCarousel media={post.media} />
+                </div>
+            )}
+
             {/* Content (preview) */}
-            <p className="text-white/80 mb-3 line-clamp-3">{post.content}</p>
+            <p className="text-white/80 mb-3 line-clamp-1">{post.content}</p>
 
             {/* Public/Private Badge */}
-            <span
+            {/* <span
                 className={`inline-block px-3 py-0.5 text-xs rounded-full mb-3 ${
                     post.isPublic
                         ? "bg-green-400/20 text-green-400 border border-green-400/30"
@@ -57,28 +65,50 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 }`}
             >
                 {post.isPublic ? "Public" : "Private"}
-            </span>
+            </span> */}
 
             {/* Stats */}
             <div className="flex items-center gap-6 mb-3 text-white/90">
                 <div className="flex gap-1 text-sm items-center">
-                    <ArrowBigUp size={20} strokeWidth={1.5} /> {post.upvotes}
+                    <ArrowBigUp
+                        size={20}
+                        strokeWidth={1.5}
+                        className="text-lime-500"
+                    />{" "}
+                    <span className="text-neutral-300">{post.upvotes}</span>
                 </div>
                 <div className="flex gap-1 text-sm items-center">
-                    <ArrowBigDown size={20} strokeWidth={1.5} />{" "}
-                    {post.downvotes}
+                    <ArrowBigDown
+                        size={20}
+                        strokeWidth={1.5}
+                        className="text-rose-800"
+                    />{" "}
+                    <span className="text-neutral-300">{post.downvotes}</span>
                 </div>
                 <div className="flex gap-1 text-sm items-center">
-                    <Star size={20} strokeWidth={1.5} /> {post.stars?.length}
+                    <Star
+                        size={20}
+                        strokeWidth={1.5}
+                        className="text-amber-500"
+                    />{" "}
+                    <span className="text-neutral-300">
+                        {post.stars?.length}
+                    </span>
                 </div>
                 <div className="flex gap-1 text-sm items-center">
-                    <MessageSquareText size={20} strokeWidth={1.5} />{" "}
-                    {post.comments?.length || 0}
+                    <MessageSquareText
+                        size={20}
+                        strokeWidth={1.5}
+                        className="text-sky-200"
+                    />{" "}
+                    <span className="text-neutral-300">
+                        {post.comments?.length || 0}
+                    </span>
                 </div>
             </div>
 
             {/* Timestamps */}
-            <div className="text-xs text-gray-400 mt-3">
+            <div className="text-xs text-gray-400 mt-3 border-t border-t-neutral-400/30 pt-1">
                 Created: {new Date(post.createdAt).toLocaleString()}
                 <br />
                 Updated: {new Date(post.updatedAt).toLocaleString()}

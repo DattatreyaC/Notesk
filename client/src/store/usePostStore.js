@@ -100,7 +100,6 @@ const usePostStore = create((set) => ({
                 });
             }
 
-            // ✅ Send multipart/form-data request
             const response = await axiosInstance.post(
                 "/posts/createPost",
                 formData,

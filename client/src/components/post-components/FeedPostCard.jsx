@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import useAuthStore from "../../store/useAuthStore.js";
 import usePostStore from "../../store/usePostStore";
+import MediaCarousel from "../MediaCarousel.jsx";
 
 const FeedPostCard = ({ post }) => {
     const { user } = useAuthStore();
@@ -55,7 +56,7 @@ const FeedPostCard = ({ post }) => {
     return (
         <Link
             to={`/post/${post._id}`}
-            className="border border-neutral-700 bg-neutral-900 text-white rounded-lg shadow-[2px_2px_10px_black] hover:border-neutral-400
+            className=" bg-black text-white rounded-lg shadow-[2px_2px_10px_black] border border-neutral-700 hover:bg-black/95 hover:border-neutral-500
                      transition duration-200"
         >
             {/* Header */}
@@ -94,11 +95,18 @@ const FeedPostCard = ({ post }) => {
             </header>
 
             {/* Post content */}
-            <div className="px-4 py-3 space-y-2">
-                <h2 className="text-xl font-semibold leading-tight text-white/90">
+            <div className="px-4 py-3 space-y-2 ">
+                <h2 className="text-2xl font-semibold leading-tight text-white/90">
                     {post.title}
                 </h2>
-                <p className="text-sm text-neutral-300 leading-relaxed line-clamp-5 overflow-hidden ">
+
+                {post.media?.length > 0 && (
+                    <div className="w-full rounded-lg">
+                        <MediaCarousel media={post.media} />
+                    </div>
+                )}
+
+                <p className="text text-neutral-300 leading-relaxed line-clamp-2 overflow-hidden mt-3 mb-5">
                     {post.content}
                 </p>
             </div>
