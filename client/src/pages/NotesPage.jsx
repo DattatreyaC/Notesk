@@ -17,7 +17,7 @@ const NotesPage = () => {
     }, []);
 
     return (
-        <section className="bg w-full h-screen flex flex-col pl-12 p-3 overflow-y-auto relative overflow-x-hidden">
+        <section className="bg w-full h-screen flex flex-col pl-14 p-3 overflow-y-auto relative overflow-x-hidden">
             <main className="w-full ">
                 {/* Page Title */}
                 <header className="text-center mb-6">

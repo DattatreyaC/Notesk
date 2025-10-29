@@ -17,7 +17,7 @@ const PostsPage = () => {
     }, []);
 
     return (
-        <section className="bg w-full h-screen flex flex-col pl-12 p-3 overflow-y-auto relative overflow-x-hidden">
+        <section className="bg w-full h-screen flex flex-col pl-15 p-3 overflow-y-auto relative overflow-x-hidden">
             <main>
                 <header className="text-center mb-6">
                     <h1 className="text-black font-extrabold text-3xl md:text-4xl lg:text-5xl">

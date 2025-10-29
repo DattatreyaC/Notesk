@@ -15,6 +15,7 @@ import PostsPage from "./pages/PostsPage.jsx";
 import FriendsPage from "./pages/FriendsPage.jsx";
 import TasksPage from "./pages/TasksPage.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
+import UserProfileSelf from "./components/profile-components/UserProfileSelf.jsx";
 import Feed from "./pages/Feed.jsx";
 import PostViewPage from "./pages/PostViewPage.jsx";
 
@@ -87,6 +88,10 @@ const App = () => {
                 <Route
                     path="/user-profile/:username"
                     element={user ? <UserProfile /> : <LandingPage />}
+                ></Route>
+                <Route
+                    path="/profile"
+                    element={user ? <UserProfileSelf /> : <LandingPage />}
                 ></Route>
 
                 <Route path="*" element={<NotFoundPage />}></Route>

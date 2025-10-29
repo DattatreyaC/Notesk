@@ -58,7 +58,7 @@ const PostViewPage = () => {
 
     if (isPostsLoading) {
         return (
-            <section className="bg w-full h-screen flex items-center justify-center pl-12 py-5 pr-1 overflow-y-auto relative overflow-x-hidden z-30">
+            <section className="bg w-full h-screen flex items-center justify-center pl-14 py-5 pr-1 overflow-y-auto relative overflow-x-hidden z-30">
                 <div className="w-full h-fit space-y-3 text-center">
                     <Loader />
                     <span>

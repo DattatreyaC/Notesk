@@ -7,23 +7,131 @@ import {
     NotebookPen,
     PanelRightClose,
     PanelRightOpen,
-    SidebarIcon,
     SquarePen,
     Star,
     Users,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore.js";
-import ConfirmationModal from "./modals/ConfirmationModal.jsx";
 import useModalStore from "../store/useModalStore.js";
+import { FaUserGear } from "react-icons/fa6";
 
 const Sidebar = () => {
     const { user } = useAuthStore();
     const { toggleModal, setData } = useModalStore();
 
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const location = useLocation();
 
+    // Sidebar Links
+    const links = (username) => [
+        {
+            to: `/profile`,
+            label: "Profile",
+            icon: (
+                <FaUserGear
+                    className={`bg-white text-black rounded-xl size-8 p-0.5 ${
+                        location.pathname === `/profile`
+                            ? "ring-2 ring-lime-600"
+                            : "text-black"
+                    }`}
+                />
+            ),
+        },
+        {
+            to: "/dashboard",
+            label: "Dashboard",
+            icon: (
+                <LayoutDashboard
+                    className={` ${
+                        location.pathname === `/dashboard`
+                            ? "text-lime-400 "
+                            : "text-white"
+                    }`}
+                />
+            ),
+        },
+        {
+            to: "/feed",
+            label: "Feed",
+            icon: (
+                <Compass
+                    className={` ${
+                        location.pathname === `/feed`
+                            ? "text-lime-400 "
+                            : "text-white"
+                    }`}
+                />
+            ),
+        },
+        {
+            to: "/notes",
+            label: "Notes",
+            icon: (
+                <NotebookPen
+                    className={` ${
+                        location.pathname === `/notes`
+                            ? "text-lime-400 "
+                            : "text-white"
+                    }`}
+                />
+            ),
+        },
+        {
+            to: "/tasks",
+            label: "Tasks",
+            icon: (
+                <ListTodo
+                    className={` ${
+                        location.pathname === `/tasks`
+                            ? "text-lime-400 "
+                            : "text-white"
+                    }`}
+                />
+            ),
+        },
+        {
+            to: "/posts",
+            label: "Posts",
+            icon: (
+                <SquarePen
+                    className={` ${
+                        location.pathname === `/posts`
+                            ? "text-lime-400 "
+                            : "text-white"
+                    }`}
+                />
+            ),
+        },
+        {
+            to: "/starred",
+            label: "Starred Posts",
+            icon: (
+                <Star
+                    className={` ${
+                        location.pathname === `/starred`
+                            ? "text-lime-400 "
+                            : "text-white"
+                    }`}
+                />
+            ),
+        },
+        {
+            to: "/friends",
+            label: "Friends",
+            icon: (
+                <Users
+                    className={` ${
+                        location.pathname === `/friends`
+                            ? "text-lime-400  "
+                            : "text-white"
+                    }`}
+                />
+            ),
+        },
+    ];
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const sidebarRef = useRef(null);
 
     useEffect(() => {
@@ -32,12 +140,9 @@ const Sidebar = () => {
                 setSidebarOpen(false);
             }
         }
-
         document.addEventListener("click", handleClickOutside);
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, [sidebarRef]);
+        return () => document.removeEventListener("click", handleClickOutside);
+    }, []);
 
     const handleLogout = () => {
         setData("Logout", "Are you sure you want to logout?");
@@ -45,198 +150,130 @@ const Sidebar = () => {
     };
 
     return (
-        <>
-            <aside
-                ref={sidebarRef}
-                // onMouseEnter={() => setSidebarOpen(true)}
-                // onMouseLeave={() => setSidebarOpen(false)}
-                className={`h-screen ${
-                    sidebarOpen
-                        ? "w-[50%] sm:w-[40%] md:w-[30%] lg:w-[25%] xl:w-[18%]"
-                        : "w-11"
-                }  border bg-black transition-all duration-300 ease-out fixed flex flex-col px-1 shadow-[0_0_10px_black] z-40 border-r border-r-neutral-100/50`}
+        <aside
+            ref={sidebarRef}
+            className={`h-screen ${
+                sidebarOpen
+                    ? "w-[50%] sm:w-[40%] md:w-[30%] lg:w-[25%] xl:w-[18%]"
+                    : "w-13"
+            }  border bg-black transition-all duration-300 ease-out fixed flex flex-col px-1 shadow-[0_0_10px_black] z-40 border-r border-r-neutral-100/50`}
+        >
+            {/* Toggle Button */}
+            <div
+                className="hover:bg-white/30 absolute top-2 right-2 rounded-sm p-[3px] transition-colors duration-150 cursor-pointer"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setSidebarOpen((prev) => !prev);
+                }}
             >
-                <div
-                    className={`hover:bg-white/30 absolute top-2 rounded-sm p-[3px] ${
-                        sidebarOpen ? "right-2" : "right-2"
-                    } transition-colors duration-150`}
+                {sidebarOpen ? (
+                    <PanelRightOpen
+                        size={26}
+                        strokeWidth={2}
+                        className="text-white"
+                    />
+                ) : (
+                    <PanelRightClose
+                        size={26}
+                        strokeWidth={2}
+                        className="text-white"
+                    />
+                )}
+            </div>
+
+            {/* Profile Section */}
+            <div
+                className={`flex flex-col items-center sm:flex-row  border-b border-white/20 mt-20 pb-2 min-h-[70px] ${
+                    sidebarOpen ? "gap-2" : "gap-2"
+                }`}
+            >
+                {user.profilePicture?.url ? (
+                    <img
+                        src={user.profilePicture.url}
+                        alt="profile"
+                        className={`border-2 border-neutral-500 rounded-full object-cover transition-all duration-300
+                            ${sidebarOpen ? "size-16" : "size-10"}
+                        `}
+                    />
+                ) : (
+                    <CircleUserRound
+                        size={sidebarOpen ? 60 : 40}
+                        strokeWidth={1.5}
+                        className="text-white duration-300"
+                    />
+                )}
+
+                {/* Slide-in Name */}
+                <span
+                    className={`text-white text-xl whitespace-nowrap transition-all duration-300 transform
+                        ${
+                            sidebarOpen
+                                ? "opacity-100 translate-x-0 pointer-events-auto"
+                                : "opacity-0 -translate-x-5 pointer-events-none"
+                        }`}
                 >
-                    {sidebarOpen ? (
-                        <PanelRightOpen
-                            strokeWidth={2}
-                            className={`text-white   `}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setSidebarOpen((prev) => !prev);
-                            }}
-                        />
-                    ) : (
-                        <PanelRightClose
-                            strokeWidth={2}
-                            className={`text-white   `}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setSidebarOpen((prev) => !prev);
-                            }}
-                        />
-                    )}
-                </div>
+                    {user.firstname}
+                </span>
+            </div>
 
-                {/* SIDEBAR MENU */}
-                <div className="flex flex-col gap-3 mt-20  border-white">
-                    <div className="w-full  border-white text-white flex flex-col sm:flex-row items-center gap-1 sm:gap-3 border-b pb-1">
-                        {user.profilePicture?.url ? (
-                            <img
-                                src={user.profilePicture.url}
-                                alt="profile picture"
-                                className={`border-2 border-neutral-500 rounded-full p-0.5 object-cover ${
-                                    sidebarOpen ? "size-18" : "size-10"
-                                }`}
-                            />
-                        ) : (
-                            <CircleUserRound size={50} strokeWidth={1.5} />
-                        )}
-
-                        <span
-                            className={`${
-                                sidebarOpen
-                                    ? "opacity-100"
-                                    : "opacity-0 absolute -translate-x-100"
-                            } duration-200 transition-all text-2xl`}
-                        >
-                            {user.firstname}
-                        </span>
-                    </div>
-
+            {/* Sidebar Links */}
+            <div className="flex flex-col gap-2.5 mt-4">
+                {links(user.username).map((item) => (
                     <Link
-                        to={"/dashboard"}
-                        className={`flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2 `}
-                    >
-                        <LayoutDashboard className="text-white" />
-
-                        <h4
-                            className={`text-white ${
-                                sidebarOpen
-                                    ? "opacity-100"
-                                    : "opacity-0 absolute "
-                            } transition-all duration-400`}
-                        >
-                            Dashboard
-                        </h4>
-                    </Link>
-
-                    <Link
-                        to={"/feed"}
-                        className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
-                    >
-                        <Compass className="text-white" />
-                        <h4
-                            className={`text-white ${
-                                sidebarOpen
-                                    ? "opacity-100"
-                                    : "opacity-0 absolute"
-                            } transition-all duration-400`}
-                        >
-                            Feed
-                        </h4>
-                    </Link>
-
-                    <Link
-                        to={"/notes"}
-                        className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
-                    >
-                        <NotebookPen className="text-white" />
-                        <h4
-                            className={`text-white ${
-                                sidebarOpen
-                                    ? "opacity-100"
-                                    : "opacity-0 absolute"
-                            } transition-all duration-400`}
-                        >
-                            Notes
-                        </h4>
-                    </Link>
-
-                    <Link
-                        to={"/tasks"}
-                        className={`flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2`}
-                    >
-                        <ListTodo className="text-white" />
-                        <h4
-                            className={`text-white ${
-                                sidebarOpen
-                                    ? "opacity-100"
-                                    : "opacity-0 absolute "
-                            } transition-all duration-400`}
-                        >
-                            Tasks
-                        </h4>
-                    </Link>
-
-                    <Link
-                        to={"/posts"}
-                        className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
-                    >
-                        <SquarePen className="text-white" />
-                        <h4
-                            className={`text-white ${
-                                sidebarOpen
-                                    ? "opacity-100"
-                                    : "opacity-0 absolute"
-                            } transition-all duration-400`}
-                        >
-                            Posts
-                        </h4>
-                    </Link>
-
-                    <Link
-                        to={"/starred"}
-                        className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
-                    >
-                        <Star className="ri-star-s-fill text-white" />
-                        <h4
-                            className={`text-white ${
-                                sidebarOpen
-                                    ? "opacity-100"
-                                    : "opacity-0 absolute whitespace-nowrap overflow-hidden"
-                            } transition-all duration-400`}
-                        >
-                            Starred Posts
-                        </h4>
-                    </Link>
-
-                    <Link
-                        to={"/friends"}
-                        className="flex gap-2 w-full hover:bg-white/20 rounded-sm px-1 py-2"
-                    >
-                        <Users className="text-white" />
-                        <h4
-                            className={`text-white ${
-                                sidebarOpen
-                                    ? "opacity-100"
-                                    : "opacity-0 absolute"
-                            } transition-all duration-400`}
-                        >
-                            Friends
-                        </h4>
-                    </Link>
-                </div>
-
-                <button
-                    className="w-full bg-red-600/30 hover:bg-red-600/20 duration-200 border border-red-600 rounded flex items-center justify-center gap-3 absolute bottom-0 left-0 p-1 cursor-pointer py-1.5"
-                    onClick={handleLogout}
-                >
-                    <LogOut className="text-white" />
-                    <span
-                        className={`text-white ${
-                            sidebarOpen ? "opacity-100" : "opacity-0 absolute"
+                        key={item.label}
+                        to={item.to}
+                        className={`flex items-center gap-2 border-white px-1 py-2 hover:bg-white/20 transition-colors duration-200 ${
+                            item.label === "Profile"
+                                ? "border border-white/30 bg-white/30 rounded-lg"
+                                : "rounded-md"
+                        } ${
+                            item.to === location.pathname &&
+                            "bg-white/15 border border-white/10"
                         }`}
                     >
-                        Logout
-                    </span>
-                </button>
-            </aside>
-        </>
+                        {/* Icon (always visible) */}
+                        <div className="flex-shrink-0 w-8 flex items-center justify-center text">
+                            {item.icon}
+                        </div>
+
+                        {/* Slide-in text */}
+                        <h4
+                            className={`text-white transition-all duration-300 whitespace-nowrap overflow-hidden transform
+                                ${
+                                    sidebarOpen
+                                        ? "opacity-100 translate-x-0 pointer-events-auto"
+                                        : "opacity-0 -translate-x-5 pointer-events-none"
+                                }`}
+                        >
+                            {item.label}
+                        </h4>
+                    </Link>
+                ))}
+            </div>
+
+            {/* Logout Button */}
+            <button
+                onClick={handleLogout}
+                className="w-full bg-red-600/30 hover:bg-red-600/20 duration-200 border border-red-600 rounded flex items-center justify-start gap-3 absolute bottom-0 left-0 p-1 py-1.5 cursor-pointer overflow-hidden"
+            >
+                {/* Icon always visible */}
+                <div className="flex-shrink-0 w-8 flex items-center justify-center">
+                    <LogOut className="text-white" />
+                </div>
+
+                {/* Text slides in/out */}
+                <span
+                    className={`text-white whitespace-nowrap transition-all duration-300 transform
+            ${
+                sidebarOpen
+                    ? "opacity-100 translate-x-0 pointer-events-auto"
+                    : "opacity-0 -translate-x-5 pointer-events-none"
+            }`}
+                >
+                    Logout
+                </span>
+            </button>
+        </aside>
     );
 };
 

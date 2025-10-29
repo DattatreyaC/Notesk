@@ -23,7 +23,7 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <section className="bg w-full min-h-screen flex flex-col pl-12 p-3 place-items-center">
+        <section className="bg w-full min-h-screen flex flex-col pl-15 p-3 place-items-center">
             {/* Page Title */}
             <h1 className="text-black font-bold text-4xl text-center mb-4">
                 DASHBOARD

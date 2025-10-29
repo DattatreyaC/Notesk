@@ -19,7 +19,7 @@ const Feed = () => {
     }, []);
 
     return (
-        <section className="bg w-full h-screen flex flex-col pl-12 py-5 pr-1 overflow-y-auto relative overflow-x-hidden z-30">
+        <section className="bg w-full h-screen flex flex-col pl-14 py-5 pr-1 overflow-y-auto relative overflow-x-hidden z-30">
             <main className="flex flex-col items-center w-full">
                 {/* Page Header */}
                 <header className="w-full text-center mb-8">
