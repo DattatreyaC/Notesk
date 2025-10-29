@@ -16,6 +16,8 @@ const FeedPostCard = ({ post }) => {
     const { user } = useAuthStore();
     const { starPost, unStarPost, starredPosts } = usePostStore();
 
+    const [starCount, setStarCount] = useState(post.stars?.length);
+
     const [isStarred, setIsStarred] = useState(starredPosts.includes(post._id));
 
     const calculateDay = () => {
@@ -73,23 +75,37 @@ const FeedPostCard = ({ post }) => {
                     </span>
                 </div>
 
-                <div>
+                <div className="flex items-center">
                     <button
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-
                             isStarred ? handleUnStar() : handleStar();
+                            isStarred
+                                ? setStarCount((prev) => prev - 1)
+                                : setStarCount((prev) => prev + 1);
                         }}
-                        className="p-1 text-xl hover:bg-neutral-400/30 duration-100 cursor-pointer rounded-lg"
+                        className={`group flex items-center gap-2 rounded-full border border-neutral-700/70 bg-neutral-700/40 hover:bg-neutral-700/40 transition-colors duration-200 px-1 py-0.5`}
                     >
-                        {isStarred ? (
-                            <FaStar
-                                className={`${isStarred && " fill-amber-500"}`}
-                            />
-                        ) : (
-                            <FaRegStar />
-                        )}
+                        {/* Star icon (only this changes color on hover) */}
+                        <div
+                            className={`p-1 rounded-md transition-colors duration-200 
+                ${
+                    isStarred
+                        ? "text-amber-400"
+                        : "text-neutral-300 group-hover:text-amber-300"
+                }`}
+                        >
+                            {isStarred ? <FaStar /> : <FaRegStar />}
+                        </div>
+
+                        {/* Separator */}
+                        <div className="w-px h-4 bg-neutral-600"></div>
+
+                        {/* Static count label — unaffected by hover */}
+                        <span className="text-sm text-neutral-300 select-none min-w-[1.5rem] pr-2 text-center transition-none">
+                            {starCount}
+                        </span>
                     </button>
                 </div>
             </header>

@@ -1,10 +1,27 @@
-import React, { useState } from "react";
-import { CircleUserRound } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { CircleUserRound, Pencil } from "lucide-react";
 import useAuthStore from "../../store/useAuthStore";
 
 const UserProfileSelf = () => {
     const { user } = useAuthStore();
     const [activeTab, setActiveTab] = useState("Summary");
+
+    const [preview, setPreview] = useState(user.profilePicture?.url || null);
+    const fileInputRef = useRef(null);
+
+    const handleImageClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setPreview(imageUrl);
+            // TODO: Upload to server (placeholder for now)
+            console.log("Selected file:", file);
+        }
+    };
 
     if (!user) return null;
 
@@ -13,23 +30,48 @@ const UserProfileSelf = () => {
     return (
         <section className="bg w-full h-screen flex flex-col pl-14 pr-1 overflow-y-auto relative overflow-x-hidden z-30 py-5">
             <main className="w-full h-full flex items-center justify-center relative">
-                <article className="flex flex-col gap-4 w-full sm:w-lg md:w-xl max-w-3xl mx-auto text-black">
-                    {/* HEADER */}
-                    <div className="flex flex-col items-center gap-2 border-b border-neutral-700 pb-3 p-4">
-                        <div className="w-24 h-24 rounded-full border border-neutral-700 flex items-center justify-center bg-neutral-800 text-neutral-500">
-                            {user.profilePicture?.url ? (
-                                <img
-                                    src={user.profilePicture.url}
-                                    alt={fullName}
-                                    className="object-cover w-full h-full rounded-full"
+                <article className="flex flex-col gap-4 w-full sm:w-lg md:w-xl max-w-3xl mx-auto text-black ">
+                    {/* Image and name */}
+                    <div className="flex flex-col gap-1 border-b pb-2">
+                        {/* Profile Picture */}
+                        <div className="place-items-center ">
+                            <div className="relative group w-24 h-24 rounded-full overflow-hidden border border-neutral-700 bg-neutral-800 flex items-center justify-center">
+                                {preview ? (
+                                    <img
+                                        src={preview}
+                                        alt={fullName}
+                                        className="object-cover w-full h-full"
+                                    />
+                                ) : (
+                                    <span className="text-neutral-500 text-sm">
+                                        No Image
+                                    </span>
+                                )}
+
+                                {/* Overlay on hover */}
+                                <div
+                                    onClick={handleImageClick}
+                                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center cursor-pointer"
+                                >
+                                    <Pencil className="text-white" size={20} />
+                                </div>
+
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    ref={fileInputRef}
+                                    onChange={handleImageChange}
+                                    className="hidden"
                                 />
-                            ) : (
-                                "No Image"
-                            )}
+                            </div>
                         </div>
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl text-center font-semibold">
-                            {fullName}
-                        </h1>
+
+                        {/* Full Name */}
+                        <div className="">
+                            <h1 className="text-3xl sm:text-4xl md:text-[2.75rem] text-center font-semibold">
+                                {fullName}
+                            </h1>
+                        </div>
                     </div>
 
                     {/* USER INFO */}
