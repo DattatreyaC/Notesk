@@ -25,19 +25,19 @@ const Sidebar = () => {
 
     // Sidebar Links
     const links = (username) => [
-        {
-            to: `/profile`,
-            label: "Profile",
-            icon: (
-                <FaUserGear
-                    className={`bg-white text-black rounded-xl size-8 p-0.5 ${
-                        location.pathname === `/profile`
-                            ? "ring-2 ring-lime-600"
-                            : "text-black"
-                    }`}
-                />
-            ),
-        },
+        // {
+        //     to: `/profile`,
+        //     label: "Profile",
+        //     icon: (
+        //         <FaUserGear
+        //             className={`bg-white text-black rounded-xl size-8 p-0.5 ${
+        //                 location.pathname === `/profile`
+        //                     ? "ring-2 ring-lime-600"
+        //                     : "text-black"
+        //             }`}
+        //         />
+        //     ),
+        // },
         {
             to: "/dashboard",
             label: "Dashboard",
@@ -158,32 +158,47 @@ const Sidebar = () => {
                     : "w-13"
             }  border bg-black transition-all duration-300 ease-out fixed flex flex-col px-1 shadow-[0_0_10px_black] z-40 border-r border-r-neutral-100/50`}
         >
-            {/* Toggle Button */}
-            <div
-                className="hover:bg-white/30 absolute top-2 right-2 rounded-sm p-[3px] transition-colors duration-150 cursor-pointer"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setSidebarOpen((prev) => !prev);
-                }}
-            >
-                {sidebarOpen ? (
-                    <PanelRightOpen
-                        size={26}
-                        strokeWidth={2}
-                        className="text-white"
-                    />
-                ) : (
-                    <PanelRightClose
-                        size={26}
-                        strokeWidth={2}
-                        className="text-white"
-                    />
-                )}
-            </div>
+            <header className="flex items-center justify-between w-full min-h-20 p-1 mb-2">
+                <img
+                    src="/Notesk.png"
+                    alt="Notesk"
+                    className={`max-h-20 aspect-auto transition-all duration-150 ${
+                        sidebarOpen
+                            ? "translate-x-0 opacity-100"
+                            : "-translate-x-100 opacity-0"
+                    }`}
+                />
+
+                {/* Toggle Button */}
+                <div
+                    className={`hover:bg-white/30 rounded-sm p-[3px] transition-colors duration-150 cursor-pointer ${
+                        !sidebarOpen && "absolute top-5 right-2"
+                    }`}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setSidebarOpen((prev) => !prev);
+                    }}
+                >
+                    {sidebarOpen ? (
+                        <PanelRightOpen
+                            size={26}
+                            strokeWidth={2}
+                            className="text-white"
+                        />
+                    ) : (
+                        <PanelRightClose
+                            size={26}
+                            strokeWidth={2}
+                            className="text-white"
+                        />
+                    )}
+                </div>
+            </header>
 
             {/* Profile Section */}
-            <div
-                className={`flex flex-col items-center sm:flex-row  border-b border-white/20 mt-20 pb-2 min-h-[70px] ${
+            <Link
+                to={"/profile"}
+                className={`flex flex-col items-center sm:flex-row  border-b border-white/20 py-2 min-h-[70px] ${
                     sidebarOpen ? "gap-2" : "gap-2"
                 }`}
             >
@@ -192,7 +207,10 @@ const Sidebar = () => {
                         src={user.profilePicture.url}
                         alt="profile"
                         className={`border-2 border-neutral-500 rounded-full object-cover transition-all duration-300
-                            ${sidebarOpen ? "size-16" : "size-10"}
+                            ${sidebarOpen ? "size-16" : "size-10"} ${
+                            location.pathname === "/profile" &&
+                            "ring-2 ring-lime-400"
+                        }
                         `}
                     />
                 ) : (
@@ -214,7 +232,7 @@ const Sidebar = () => {
                 >
                     {user.firstname}
                 </span>
-            </div>
+            </Link>
 
             {/* Sidebar Links */}
             <div className="flex flex-col gap-2.5 mt-4">

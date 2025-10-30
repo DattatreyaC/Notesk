@@ -22,10 +22,10 @@ const Feed = () => {
         <section className="bg w-full h-screen flex flex-col pl-14 py-5 pr-1 overflow-y-auto relative overflow-x-hidden z-30">
             <main className="flex flex-col items-center w-full">
                 {/* Page Header */}
-                <header className="w-full text-center mb-8">
-                    <h1 className="text-black font-extrabold text-3xl md:text-4xl lg:text-5xl tracking-tight">
+                <header className="w-full text-center mb-5">
+                    {/* <h1 className="text-black font-extrabold text-3xl md:text-4xl lg:text-5xl tracking-tight">
                         Your Feed
-                    </h1>
+                    </h1> */}
                 </header>
 
                 {/* Feed List */}

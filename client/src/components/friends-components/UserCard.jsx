@@ -24,7 +24,7 @@ const UserCard = ({ friend, user }) => {
 
     const isFriend =
         user?.friends?.some(
-            (f) => f?._id?.toString() === friend?._id?.toString(),
+            (f) => f?._id?.toString() === friend?._id?.toString()
         ) || false;
 
     const outgoingPending =
@@ -44,14 +44,41 @@ const UserCard = ({ friend, user }) => {
 
     return (
         <div className="max-w-sm w-full h-max bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative flex flex-col gap-1">
-            <div className="w-full flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-white ">
-                    {`${friend?.firstname || ""} ${friend?.lastname || ""}`}
-                </h2>
+            <div className="w-full flex items-start justify-between ">
+                {/* Profile picture and name */}
+                <div className="flex items-center gap-2 mb-2">
+                    {/* Profile picture */}
+                    <div className="rounded-full overflow-hidden border border-neutral-400/50 size-15 place-content-center">
+                        {friend.profilePicture ? (
+                            <img
+                                src={friend.profilePicture.url}
+                                alt="Profile Picture"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <p className="text-white text-[0.5rem] text-center">
+                                No image
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Name and username*/}
+                    <div>
+                        <h2 className="text-xl font-semibold text-white ">
+                            {`${friend?.firstname || ""} ${
+                                friend?.lastname || ""
+                            }`}
+                        </h2>
+
+                        <h5 className="text-sm italic text-white/80 font-light ">
+                            {friend?.username || ""}
+                        </h5>
+                    </div>
+                </div>
 
                 {isFriend ? (
                     <button
-                        className="text-white text-sm rounded-full p-1 hover:bg-white/20 duration-200"
+                        className="text-white text-sm rounded-full mt-2 p-1 hover:bg-white/20 duration-200"
                         onClick={(e) => {
                             e.stopPropagation();
                             setIsOpen((prev) => !prev);
@@ -81,21 +108,17 @@ const UserCard = ({ friend, user }) => {
                 ) : (
                     <button
                         onClick={() => sendFriendRequest(friend._id)}
-                        className="text-green-500 bg-green-700/30 border border-green-500/50 rounded p-1 flex items-center gap-2 justify-center duration-200 hover:bg-green-600/40"
+                        className="text-green-500 bg-green-700/30 border border-green-500/50 rounded p-1 flex items-center gap-2 justify-center duration-200 mt-2 hover:bg-green-600/40"
                     >
                         <UserRoundPlus size={18} />
-                        <p className="text-sm">Add Friend</p>
+                        <p className="text-sm">Add</p>
                     </button>
                 )}
             </div>
 
-            <h5 className="text-sm italic text-white/80 font-light ">
-                {friend?.username || ""}
-            </h5>
-
             <Link
                 to={`/user-profile/${friend.username}`}
-                className="text-black py-0.5 px-1 rounded w-fit bg-white text-sm border border-white/50 hover:bg-white/80 duration-200"
+                className="text-black py-0.5 px-1 mx-auto rounded w-fit bg-white text-sm border border-white/50 hover:bg-white/80 duration-200"
             >
                 Profile
             </Link>
