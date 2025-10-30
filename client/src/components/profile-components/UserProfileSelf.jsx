@@ -1,12 +1,17 @@
 import React, { useRef, useState } from "react";
-import { CircleUserRound, Pencil } from "lucide-react";
+import { Pencil, Check, X, Loader2 } from "lucide-react";
 import useAuthStore from "../../store/useAuthStore";
 
 const UserProfileSelf = () => {
-    const { user } = useAuthStore();
+    const { user, editProfile, isUpdatingProfile } = useAuthStore();
     const [activeTab, setActiveTab] = useState("Summary");
-
     const [preview, setPreview] = useState(user.profilePicture?.url || null);
+    const [originalPicture, setOriginalPicture] = useState(
+        user.profilePicture?.url || null
+    );
+
+    const [showButtons, setShowButtons] = useState(false);
+
     const fileInputRef = useRef(null);
 
     const handleImageClick = () => {
@@ -18,9 +23,36 @@ const UserProfileSelf = () => {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setPreview(imageUrl);
-            // TODO: Upload to server (placeholder for now)
-            console.log("Selected file:", file);
+            setShowButtons(true);
         }
+    };
+
+    const handleSave = async () => {
+        if (!preview || !fileInputRef.current?.files[0]) return;
+
+        const file = fileInputRef.current.files[0];
+        const result = await editProfile({ file });
+
+        if (result.success) {
+            setOriginalPicture(preview);
+            setShowButtons(false);
+            fileInputRef.current.value = "";
+        } else {
+            console.error(result.error);
+        }
+
+        setOriginalPicture(preview);
+        setShowButtons(false);
+
+        if (fileInputRef.current) fileInputRef.current.value = "";
+    };
+
+    const handleUndo = () => {
+        // Revert to original preview
+        setPreview(originalPicture);
+        setShowButtons(false);
+
+        if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
     if (!user) return null;
@@ -30,12 +62,11 @@ const UserProfileSelf = () => {
     return (
         <section className="bg w-full h-screen flex flex-col pl-14 pr-1 overflow-y-auto relative overflow-x-hidden z-30 py-5">
             <main className="w-full h-full flex items-center justify-center relative">
-                <article className="flex flex-col gap-4 w-full sm:w-lg md:w-xl max-w-3xl mx-auto text-black ">
-                    {/* Image and name */}
+                <article className="flex flex-col gap-4 w-full sm:w-lg md:w-xl max-w-3xl mx-auto text-black">
                     <div className="flex flex-col gap-1 border-b pb-2">
-                        {/* Profile Picture */}
-                        <div className="place-items-center ">
-                            <div className="relative group w-24 h-24 rounded-full overflow-hidden border border-neutral-700 bg-neutral-800 flex items-center justify-center">
+                        <div className="place-items-center relative flex justify-center">
+                            {/* Profile Picture */}
+                            <div className="relative group w-24 h-24 rounded-full overflow-hidden border border-neutral-700 bg-neutral-800 flex items-center justify-center z-20">
                                 {preview ? (
                                     <img
                                         src={preview}
@@ -48,7 +79,7 @@ const UserProfileSelf = () => {
                                     </span>
                                 )}
 
-                                {/* Overlay on hover */}
+                                {/* Hover overlay */}
                                 <div
                                     onClick={handleImageClick}
                                     className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center cursor-pointer"
@@ -64,35 +95,63 @@ const UserProfileSelf = () => {
                                     className="hidden"
                                 />
                             </div>
+
+                            {/* Sliding buttons */}
+                            <div className="absolute top-1/2 transform -translate-y-1/2 w-full flex justify-between px-1 z-10">
+                                <button
+                                    onClick={handleUndo}
+                                    disabled={isUpdatingProfile}
+                                    className={`transition-transform duration-300 bg-red-600 hover:bg-red-700 text-white rounded-full p-1.5 shadow-md disabled:cursor-not-allowed ${
+                                        showButtons
+                                            ? "translate-x-50"
+                                            : "translate-x-70"
+                                    }`}
+                                >
+                                    <X size={16} />
+                                </button>
+                                <button
+                                    onClick={handleSave}
+                                    disabled={isUpdatingProfile}
+                                    className={`transition-transform duration-300 bg-green-600 hover:bg-green-700 text-white rounded-full p-1.5 shadow-md disabled:cursor-not-allowed ${
+                                        showButtons
+                                            ? "-translate-x-50"
+                                            : "-translate-x-70"
+                                    }`}
+                                >
+                                    {!isUpdatingProfile ? (
+                                        <Check size={16} />
+                                    ) : (
+                                        <Loader2
+                                            size={16}
+                                            className="animate-spin"
+                                        />
+                                    )}
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Full Name */}
-                        <div className="">
-                            <h1 className="text-3xl sm:text-4xl md:text-[2.75rem] text-center font-semibold">
-                                {fullName}
-                            </h1>
-                        </div>
+                        <h1 className="text-3xl sm:text-4xl md:text-[2.75rem] text-center font-semibold">
+                            {fullName}
+                        </h1>
                     </div>
 
-                    {/* USER INFO */}
                     <div className="px-2 space-y-1">
                         <h2 className="font-bold text-black">
-                            Username :{" "}
+                            Username:{" "}
                             <span className="text-neutral-600 font-medium">
                                 @{user.username}
                             </span>
                         </h2>
                         <p className="font-bold text-black">
-                            Email :{" "}
+                            Email:{" "}
                             <span className="text-neutral-600 font-medium">
                                 {user.email}
                             </span>
                         </p>
                     </div>
 
-                    <div className="">
-                        {/* tab buttons */}
-                        <div className="flex w-full gap-1 items-center justify-start border-b border-neutral-600 bg-neutral-900 rounded-t-lg pt-1 px-1 ">
+                    <div>
+                        <div className="flex w-full gap-1 items-center justify-start border-b border-neutral-600 bg-neutral-900 rounded-t-lg pt-1 px-1">
                             {["Summary", "Account"].map((tab) => (
                                 <button
                                     key={tab}
@@ -109,9 +168,7 @@ const UserProfileSelf = () => {
                             ))}
                         </div>
 
-                        {/* TABS */}
                         <div className="bg-neutral-400/70 border border-neutral-600 border-t-0 rounded-b-lg shadow-lg shadow-black/30 p-4">
-                            {/* SUMMARY TAB */}
                             {activeTab === "Summary" && (
                                 <div className="text-sm text-neutral-300 grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2">
                                     {[
@@ -147,7 +204,6 @@ const UserProfileSelf = () => {
                                 </div>
                             )}
 
-                            {/* ACCOUNT TAB */}
                             {activeTab === "Account" && (
                                 <div className="text-neutral-800 text-sm space-y-2 mt-3">
                                     <p>
@@ -161,7 +217,7 @@ const UserProfileSelf = () => {
                                             Joined:
                                         </span>{" "}
                                         {new Date(
-                                            user.createdAt,
+                                            user.createdAt
                                         ).toLocaleDateString()}
                                     </p>
 

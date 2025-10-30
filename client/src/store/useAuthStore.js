@@ -6,6 +6,7 @@ const useAuthStore = create((set, get) => ({
     user: null,
     isCheckingAuth: false,
     isAuthLoading: false,
+    isUpdatingProfile: false,
     otpAction: null,
     otpEmail: null,
 
@@ -18,6 +19,54 @@ const useAuthStore = create((set, get) => ({
             set({ user: null });
         } finally {
             set({ isCheckingAuth: false });
+        }
+    },
+
+    editProfile: async (updatedData) => {
+        const { user } = get();
+        const formData = new FormData();
+
+        if (updatedData.firstname)
+            formData.append("firstname", updatedData.firstname);
+        if (updatedData.lastname)
+            formData.append("lastname", updatedData.lastname);
+        if (updatedData.username)
+            formData.append("username", updatedData.username);
+        if (updatedData.file) formData.append("avatar", updatedData.file);
+
+        try {
+            set({ isUpdatingProfile: true });
+
+            const response = await axiosInstance.put("/auth/update", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            const updatedUser = response.data;
+
+            set({ user: updatedUser });
+
+            return { success: true, user: updatedUser };
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Error sending OTP", {
+                style: {
+                    border: "1px solid red",
+                    padding: "12px",
+                    color: "white",
+                    background: "rgba(100,0,0,0.8)",
+                },
+                iconTheme: {
+                    primary: "white",
+                    secondary: "red",
+                },
+            });
+            return {
+                success: false,
+                error: error.response?.data || "Profile update failed",
+            };
+        } finally {
+            set({ isUpdatingProfile: false });
         }
     },
 
@@ -173,7 +222,7 @@ const useAuthStore = create((set, get) => ({
                         primary: "white",
                         secondary: "red",
                     },
-                },
+                }
             );
 
             return false;
@@ -207,12 +256,12 @@ const useAuthStore = create((set, get) => ({
 
             const response = await axiosInstance.post(
                 "/auth/reset-password",
-                payload,
+                payload
             );
 
             if (response.status === 200) {
                 toast.success(
-                    response.data.message || "Password reset successfully",
+                    response.data.message || "Password reset successfully"
                 );
 
                 set({ otpEmail: null });
@@ -221,7 +270,7 @@ const useAuthStore = create((set, get) => ({
             }
         } catch (error) {
             toast.error(
-                error?.response?.data?.message || "Something went wrong",
+                error?.response?.data?.message || "Something went wrong"
             );
         } finally {
             set({ isAuthLoading: false });

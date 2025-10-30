@@ -168,7 +168,7 @@ export const updateProfile = async (req, res) => {
         if (req.file) {
             uploadedPicture = await uploadOnCloudinary(
                 req.file.path,
-                req.user._id,
+                req.user._id
             );
 
             if (uploadedPicture) {
@@ -201,7 +201,7 @@ export const deleteProfile = async (req, res) => {
         if (!otp) {
             // send OTP
             const generatedOtp = Math.floor(
-                1000 + Math.random() * 9000,
+                1000 + Math.random() * 9000
             ).toString();
             user.otp = generatedOtp;
             user.otpExpires = Date.now() + 5 * 60 * 1000;
@@ -299,7 +299,7 @@ export const resetPassword = async (req, res) => {
 
         const user = await User.findOneAndUpdate(
             { email },
-            { password: hashedPassword },
+            { password: hashedPassword }
         );
 
         if (!user) return res.status(400).json({ message: "User not found" });
