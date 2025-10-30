@@ -107,7 +107,7 @@ const usePostStore = create((set) => ({
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
-                },
+                }
             );
 
             if (response.status === 201) {
@@ -157,7 +157,7 @@ const usePostStore = create((set) => ({
 
         try {
             const response = await axiosInstance.delete(
-                `/posts/deletePost/${id}`,
+                `/posts/deletePost/${id}`
             );
 
             if (response.status === 200 || response.status === 204) {
@@ -208,7 +208,7 @@ const usePostStore = create((set) => ({
     starPost: async (postId) => {
         try {
             const response = await axiosInstance.post(
-                `/posts/post/star/${postId}`,
+                `/posts/post/star/${postId}`
             );
 
             if (response.status === 200) {
@@ -239,12 +239,12 @@ const usePostStore = create((set) => ({
     unStarPost: async (postId) => {
         try {
             const response = await axiosInstance.post(
-                `/posts/post/unstar/${postId}`,
+                `/posts/post/unstar/${postId}`
             );
             if (response.status === 200) {
                 set((state) => ({
                     starredPosts: state.starredPosts.filter(
-                        (id) => id !== postId,
+                        (id) => id !== postId
                     ),
                 }));
 
@@ -266,6 +266,31 @@ const usePostStore = create((set) => ({
             console.log(error);
 
             return false;
+        }
+    },
+
+    upvotePost: async (postId) => {
+        try {
+            const response = await axiosInstance.post(
+                `/posts/post/upvote/${postId}`
+            );
+
+            if (response.status === 200) {
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    revertUpvotePost: async (postId) => {
+        try {
+            const response = await axiosInstance.post(
+                `/posts/post/unupvote/${postId}`
+            );
+            if (response.status === 200) {
+            }
+        } catch (error) {
+            console.log(error);
         }
     },
 }));

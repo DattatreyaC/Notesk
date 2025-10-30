@@ -7,18 +7,23 @@ import {
 import { FaRegStar } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuthStore from "../../store/useAuthStore.js";
 import usePostStore from "../../store/usePostStore";
 import MediaCarousel from "../MediaCarousel.jsx";
 
 const FeedPostCard = ({ post }) => {
     const { user } = useAuthStore();
-    const { starPost, unStarPost, starredPosts } = usePostStore();
+    const { starPost, unStarPost, starredPosts, upvotePost, revertUpvotePost } =
+        usePostStore();
 
     const [starCount, setStarCount] = useState(post.stars?.length);
-
     const [isStarred, setIsStarred] = useState(starredPosts.includes(post._id));
+
+    const [upvotes, setUpvotes] = useState(post.upvotes.length);
+    const [isUpvoted, setIsUpvoted] = useState(
+        post.upvotes?.includes(user._id)
+    );
 
     const calculateDay = () => {
         const date = new Date(post.createdAt);
@@ -52,6 +57,22 @@ const FeedPostCard = ({ post }) => {
         const success = await unStarPost(post._id);
         if (success) {
             setIsStarred(false);
+        }
+    };
+
+    const handleUpvote = async () => {
+        const success = await upvotePost(post._id);
+        if (success) {
+            setUpvotes((prev) => prev + 1);
+            setIsUpvoted(true);
+        }
+    };
+
+    const handleRevertUpvote = async () => {
+        const success = await revertUpvotePost(post._id);
+        if (success) {
+            setUpvotes((prev) => prev - 1);
+            setIsUpvoted(false);
         }
     };
 
@@ -132,14 +153,17 @@ const FeedPostCard = ({ post }) => {
                 {/* Upvote/Downvote */}
                 <div className="flex items-center bg-neutral-800/50 border border-neutral-700 rounded-full overflow-hidden">
                     <button
-                        className="flex items-center gap-1 px-2 py-1 hover:bg-emerald-600/70 transition "
+                        className={`flex items-center gap-1 px-2 py-1 hover:bg-emerald-600/70 transition ${
+                            isUpvoted ? "bg-green-700/80" : ""
+                        }`}
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            isUpvoted ? handleRevertUpvote() : handleUpvote();
                         }}
                     >
                         <ArrowBigUp size={18} />
-                        <span className="text-sm">{post.upvotes}</span>
+                        <span className="text-sm">{upvotes}</span>
                     </button>
                     <button
                         className="flex items-center gap-1 px-2 py-1 hover:bg-rose-600/70 transition"

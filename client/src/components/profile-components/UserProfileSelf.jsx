@@ -1,15 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Pencil, Check, X, Loader2 } from "lucide-react";
 import useAuthStore from "../../store/useAuthStore";
 
 const UserProfileSelf = () => {
     const { user, editProfile, isUpdatingProfile } = useAuthStore();
+
     const [activeTab, setActiveTab] = useState("Summary");
     const [preview, setPreview] = useState(user.profilePicture?.url || null);
     const [originalPicture, setOriginalPicture] = useState(
         user.profilePicture?.url || null
     );
-
     const [showButtons, setShowButtons] = useState(false);
 
     const fileInputRef = useRef(null);

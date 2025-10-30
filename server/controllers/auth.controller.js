@@ -155,7 +155,7 @@ export const updateProfile = async (req, res) => {
 
         let uploadedPicture = "";
 
-        const user = await User.findById(req.user._id);
+        const user = req.user;
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -177,8 +177,6 @@ export const updateProfile = async (req, res) => {
                 }
 
                 user.profilePicture = uploadedPicture;
-
-                await user.save();
             }
         }
 

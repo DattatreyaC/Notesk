@@ -23,7 +23,6 @@ const useAuthStore = create((set, get) => ({
     },
 
     editProfile: async (updatedData) => {
-        const { user } = get();
         const formData = new FormData();
 
         if (updatedData.firstname)
@@ -182,7 +181,7 @@ const useAuthStore = create((set, get) => ({
                 withCredentials: true,
             });
 
-            if (response.status === 200) {
+            if (response.status === 200 || response.status === 201) {
                 toast.success(response.data.message, {
                     style: {
                         border: "1px solid green",

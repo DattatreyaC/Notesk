@@ -26,14 +26,20 @@ const postSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
-        upvotes: {
-            type: Number,
-            default: 0,
-        },
-        downvotes: {
-            type: Number,
-            default: 0,
-        },
+        upvotes: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+                default: [],
+            },
+        ],
+        downvotes: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+                default: [],
+            },
+        ],
         stars: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -51,7 +57,7 @@ const postSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
-    },
+    }
 );
 
 const Post = mongoose.model("Post", postSchema);
