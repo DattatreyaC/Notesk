@@ -12,17 +12,32 @@ import useAuthStore from "../../store/useAuthStore.js";
 import usePostStore from "../../store/usePostStore";
 import MediaCarousel from "../MediaCarousel.jsx";
 
-const FeedPostCard = ({ post }) => {
+const FeedPostCard = ({ postId }) => {
     const { user } = useAuthStore();
-    const { starPost, unStarPost, starredPosts, upvotePost, revertUpvotePost } =
-        usePostStore();
+    const {
+        starPost,
+        unStarPost,
+        starredPosts,
+        upvotePost,
+        revertUpvotePost,
+        downvotePost,
+        revertDownvotePost,
+    } = usePostStore();
+
+    const post = usePostStore((state) =>
+        state.feedPosts.find((p) => p._id === postId),
+    );
 
     const [starCount, setStarCount] = useState(post.stars?.length);
     const [isStarred, setIsStarred] = useState(starredPosts.includes(post._id));
 
     const [upvotes, setUpvotes] = useState(post.upvotes.length);
     const [isUpvoted, setIsUpvoted] = useState(
-        post.upvotes?.includes(user._id)
+        post.upvotes?.includes(user._id),
+    );
+
+    const [isDownvoted, setIsDownvoted] = useState(
+        post.downvotes.includes(user._id),
     );
 
     const calculateDay = () => {
@@ -63,6 +78,9 @@ const FeedPostCard = ({ post }) => {
     const handleUpvote = async () => {
         const success = await upvotePost(post._id);
         if (success) {
+            if (isDownvoted) {
+                handleRevertDownvote();
+            }
             setUpvotes((prev) => prev + 1);
             setIsUpvoted(true);
         }
@@ -73,6 +91,23 @@ const FeedPostCard = ({ post }) => {
         if (success) {
             setUpvotes((prev) => prev - 1);
             setIsUpvoted(false);
+        }
+    };
+
+    const handleDownVote = async () => {
+        const success = await downvotePost(post._id);
+        if (success) {
+            if (isUpvoted) {
+                handleRevertUpvote();
+            }
+            setIsDownvoted(true);
+        }
+    };
+
+    const handleRevertDownvote = async () => {
+        const success = await revertDownvotePost(post._id);
+        if (success) {
+            setIsDownvoted(false);
         }
     };
 
@@ -154,7 +189,7 @@ const FeedPostCard = ({ post }) => {
                 <div className="flex items-center bg-neutral-800/50 border border-neutral-700 rounded-full overflow-hidden">
                     <button
                         className={`flex items-center gap-1 px-2 py-1 hover:bg-emerald-600/70 transition ${
-                            isUpvoted ? "bg-green-700/80" : ""
+                            isUpvoted ? "bg-green-400/20" : ""
                         }`}
                         onClick={(e) => {
                             e.preventDefault();
@@ -166,10 +201,15 @@ const FeedPostCard = ({ post }) => {
                         <span className="text-sm">{upvotes}</span>
                     </button>
                     <button
-                        className="flex items-center gap-1 px-2 py-1 hover:bg-rose-600/70 transition"
+                        className={`flex items-center gap-1 px-2 py-1 hover:bg-rose-600/70 transition ${
+                            isDownvoted ? "bg-rose-600" : ""
+                        }`}
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            isDownvoted
+                                ? handleRevertDownvote()
+                                : handleDownVote();
                         }}
                     >
                         <ArrowBigDown size={18} />

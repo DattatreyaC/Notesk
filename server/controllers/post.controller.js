@@ -181,17 +181,18 @@ export const getAllPosts = async (req, res) => {
 export const upvotePostController = async (req, res) => {
     try {
         const id = req.params.id;
+
         const post = await Post.findByIdAndUpdate(id, {
-            $push: {
+            $addToSet: {
                 upvotes: req.user._id,
             },
-        });
+        }).populate("user");
 
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
 
-        return res.status(200).json({ message: "Post Upvoted" });
+        return res.status(200).json({ message: "Post Upvoted", post });
     } catch (error) {
         console.log(`Error in upvotePostController : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
@@ -201,22 +202,21 @@ export const upvotePostController = async (req, res) => {
 export const revertUpvoteController = async (req, res) => {
     try {
         const id = req.params.id;
-        const post = await Post.findById(id);
-        if (!post || !post.upvotes.includes(req.user._id)) {
-            return res.status(404).json({ message: "Post not found" });
-        }
-
-        const updatedPost = await Post.findByIdAndUpdate(id, {
-            $pull: {
-                upvotes: req.user._id,
+        const post = await Post.findByIdAndUpdate(
+            id,
+            {
+                $pull: {
+                    upvotes: req.user._id,
+                },
             },
-        });
+            { new: true },
+        ).populate("user");
 
-        if (!updatedPost) {
+        if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
 
-        return res.status(200).json({ message: "Upvote reverted" });
+        return res.status(200).json({ message: "Upvote reverted", post });
     } catch (error) {
         console.log(`Error in revertUpvoteController : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
@@ -226,17 +226,22 @@ export const revertUpvoteController = async (req, res) => {
 export const downvotePostController = async (req, res) => {
     try {
         const id = req.params.id;
-        const post = await Post.findByIdAndUpdate(id, {
-            $push: {
-                downvotes: req.user._id,
+
+        const post = await Post.findByIdAndUpdate(
+            id,
+            {
+                $addToSet: {
+                    downvotes: req.user._id,
+                },
             },
-        });
+            { new: true },
+        ).populate("user");
 
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
 
-        return res.status(200).json({ message: "Post Upvoted" });
+        return res.status(200).json({ message: "Post Downvoted", post });
     } catch (error) {
         console.log(`Error in downvotePostController : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
@@ -247,22 +252,21 @@ export const revertDownvoteController = async (req, res) => {
     try {
         const id = req.params.id;
 
-        const post = await Post.findById(id);
-        if (!post || !post.downvotes.includes(req.user._id)) {
-            return res.status(404).json({ message: "Post not found" });
-        }
-
-        const updatedPost = await Post.findByIdAndUpdate(id, {
-            $pull: {
-                downvotes: req.user._id,
+        const post = await Post.findByIdAndUpdate(
+            id,
+            {
+                $pull: {
+                    downvotes: req.user._id,
+                },
             },
-        });
+            { new: true },
+        ).populate("user");
 
-        if (!updatedPost) {
+        if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
 
-        return res.status(200).json({ message: "Upvote reverted" });
+        return res.status(200).json({ message: "Downvote reverted", post });
     } catch (error) {
         console.log(`Error in revertDownvoteController : ${error}`);
         return res.status(500).json({ message: "Internal server error" });

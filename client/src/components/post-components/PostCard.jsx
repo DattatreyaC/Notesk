@@ -75,7 +75,9 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                         strokeWidth={1.5}
                         className="text-lime-500"
                     />{" "}
-                    <span className="text-neutral-300">{post.upvotes}</span>
+                    <span className="text-neutral-300">
+                        {post.upvotes.length}
+                    </span>
                 </div>
                 <div className="flex gap-1 text-sm items-center">
                     <ArrowBigDown
@@ -83,7 +85,9 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                         strokeWidth={1.5}
                         className="text-rose-800"
                     />{" "}
-                    <span className="text-neutral-300">{post.downvotes}</span>
+                    <span className="text-neutral-300">
+                        {post.downvotes.length}
+                    </span>
                 </div>
                 <div className="flex gap-1 text-sm items-center">
                     <Star

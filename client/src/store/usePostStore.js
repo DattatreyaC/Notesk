@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { toast } from "react-hot-toast";
 import axiosInstance from "../utils/axiosInstance";
 
-const usePostStore = create((set) => ({
+const usePostStore = create((set, get) => ({
     post: null,
     myPosts: [],
     starredPosts: [],
@@ -107,7 +107,7 @@ const usePostStore = create((set) => ({
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
-                }
+                },
             );
 
             if (response.status === 201) {
@@ -157,7 +157,7 @@ const usePostStore = create((set) => ({
 
         try {
             const response = await axiosInstance.delete(
-                `/posts/deletePost/${id}`
+                `/posts/deletePost/${id}`,
             );
 
             if (response.status === 200 || response.status === 204) {
@@ -208,7 +208,7 @@ const usePostStore = create((set) => ({
     starPost: async (postId) => {
         try {
             const response = await axiosInstance.post(
-                `/posts/post/star/${postId}`
+                `/posts/post/star/${postId}`,
             );
 
             if (response.status === 200) {
@@ -239,12 +239,12 @@ const usePostStore = create((set) => ({
     unStarPost: async (postId) => {
         try {
             const response = await axiosInstance.post(
-                `/posts/post/unstar/${postId}`
+                `/posts/post/unstar/${postId}`,
             );
             if (response.status === 200) {
                 set((state) => ({
                     starredPosts: state.starredPosts.filter(
-                        (id) => id !== postId
+                        (id) => id !== postId,
                     ),
                 }));
 
@@ -263,7 +263,7 @@ const usePostStore = create((set) => ({
                     secondary: "red",
                 },
             });
-            console.log(error);
+            console.error(error);
 
             return false;
         }
@@ -272,25 +272,87 @@ const usePostStore = create((set) => ({
     upvotePost: async (postId) => {
         try {
             const response = await axiosInstance.post(
-                `/posts/post/upvote/${postId}`
+                `/posts/post/upvote/${postId}`,
             );
 
             if (response.status === 200) {
+                const updatedPost = response.data.post;
+
+                set((state) => ({
+                    feedPosts: state.feedPosts.map((p) => {
+                        return p._id === updatedPost._id ? updatedPost : p;
+                    }),
+                }));
+                return true;
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            return false;
         }
     },
 
     revertUpvotePost: async (postId) => {
         try {
             const response = await axiosInstance.post(
-                `/posts/post/unupvote/${postId}`
+                `/posts/post/unupvote/${postId}`,
             );
             if (response.status === 200) {
+                const updatedPost = response.data.post;
+
+                set((state) => ({
+                    feedPosts: state.feedPosts.map((p) => {
+                        return p._id === updatedPost._id ? updatedPost : p;
+                    }),
+                }));
+                return true;
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            return false;
+        }
+    },
+
+    downvotePost: async (postId) => {
+        try {
+            const response = await axiosInstance.post(
+                `/posts/post/downvote/${postId}`,
+            );
+
+            if (response.status === 200) {
+                const updatedPost = response.data.post;
+
+                set((state) => ({
+                    feedPosts: state.feedPosts.map((p) => {
+                        return p._id === updatedPost._id ? updatedPost : p;
+                    }),
+                }));
+                return true;
+            }
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    },
+
+    revertDownvotePost: async (postId) => {
+        try {
+            const response = await axiosInstance.post(
+                `/posts/post/undownvote/${postId}`,
+            );
+
+            if (response.status === 200) {
+                const updatedPost = response.data.post;
+
+                set((state) => ({
+                    feedPosts: state.feedPosts.map((p) => {
+                        return p._id === updatedPost._id ? updatedPost : p;
+                    }),
+                }));
+                return true;
+            }
+        } catch (error) {
+            console.error(error);
+            return false;
         }
     },
 }));

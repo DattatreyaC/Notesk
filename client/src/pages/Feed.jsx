@@ -4,13 +4,8 @@ import FeedPostCard from "../components/post-components/FeedPostCard";
 import useAuthStore from "../store/useAuthStore";
 
 const Feed = () => {
-    const {
-        feedPosts,
-        starredPosts,
-        setStarredPosts,
-        fetchFeedPosts,
-        isFeedLoading,
-    } = usePostStore();
+    const { feedPosts, setStarredPosts, fetchFeedPosts, isFeedLoading } =
+        usePostStore();
     const { user } = useAuthStore();
 
     useEffect(() => {
@@ -47,7 +42,7 @@ const Feed = () => {
                         </p>
                     ) : (
                         feedPosts.map((post) => (
-                            <FeedPostCard key={post._id} post={post} />
+                            <FeedPostCard key={post._id} postId={post._id} />
                         ))
                     )}
                 </article>
