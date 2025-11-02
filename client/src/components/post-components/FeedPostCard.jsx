@@ -75,8 +75,6 @@ const FeedPostCard = ({ postId }) => {
         }
     };
 
-    const sharePost = async();
-
     const handleUpvote = async () => {
         const success = await upvotePost(post._id);
         if (success) {
