@@ -23,6 +23,10 @@ const Sidebar = () => {
 
     const location = useLocation();
 
+    // useEffect(() => {
+    //     console.log(location);
+    // }, [location]);
+
     // Sidebar Links
     const links = (username) => [
         // {

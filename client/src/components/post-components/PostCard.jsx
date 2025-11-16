@@ -30,8 +30,8 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     return (
         <div className="max-w-lg w-full bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative">
             {/* Title + Menu Button */}
-            <div className="w-full flex items-center justify-between">
-                <h2 className="text-xl md:text-2xl font-semibold text-white line-clamp-1">
+            <div className="w-full flex items-center justify-between ">
+                <h2 className="text-xl md:text-2xl font-semibold text-white line-clamp-1 mb-2">
                     {post.title}
                 </h2>
 

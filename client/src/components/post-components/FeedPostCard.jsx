@@ -14,6 +14,7 @@ import MediaCarousel from "../MediaCarousel.jsx";
 
 const FeedPostCard = ({ postId }) => {
     const { user } = useAuthStore();
+
     const {
         starPost,
         unStarPost,
@@ -186,10 +187,12 @@ const FeedPostCard = ({ postId }) => {
             {/* Footer */}
             <footer className="flex items-center gap-3 px-4 py-2 border-t border-neutral-800 text-sm text-neutral-300">
                 {/* Upvote/Downvote */}
-                <div className="flex items-center bg-neutral-800/50 border border-neutral-700 rounded-full overflow-hidden">
+                <div className="flex items-center gap-0 bg-neutral-800/50 border border-neutral-700 rounded-full overflow-hidden">
                     <button
-                        className={`flex items-center gap-1 px-2 py-1 hover:bg-emerald-600/70 transition ${
-                            isUpvoted ? "bg-green-400/20" : ""
+                        className={`flex items-center gap-1 px-2 py-1  duration-200 transition ${
+                            isUpvoted
+                                ? "bg-white text-black hover:bg-white/70"
+                                : "hover:bg-white/10"
                         }`}
                         onClick={(e) => {
                             e.preventDefault();
@@ -201,8 +204,10 @@ const FeedPostCard = ({ postId }) => {
                         <span className="text-sm">{upvotes}</span>
                     </button>
                     <button
-                        className={`flex items-center gap-1 px-2 py-1 hover:bg-rose-600/70 transition ${
-                            isDownvoted ? "bg-rose-600" : ""
+                        className={`flex items-center gap-1 px-2 py-1 h-full duration-200 transition ${
+                            isDownvoted
+                                ? "bg-white text-black hover:bg-white/70"
+                                : "hover:bg-white/10"
                         }`}
                         onClick={(e) => {
                             e.preventDefault();

@@ -56,11 +56,14 @@ const usePostStore = create((set, get) => ({
 
             if (response.status === 200) {
                 set({ post: response.data });
+
+                return true;
             } else {
                 set({ post: null });
             }
         } catch (error) {
             set({ post: null });
+            return false;
         } finally {
             set({ isPostsLoading: false });
         }

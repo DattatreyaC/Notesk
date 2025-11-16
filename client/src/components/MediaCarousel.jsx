@@ -78,7 +78,7 @@ export default function MediaCarousel({
 
     return (
         <div
-            className="w-full max-w-4xl mx-auto select-none"
+            className="w-full max-w-5xl mx-auto select-none"
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
