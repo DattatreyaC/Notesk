@@ -26,7 +26,7 @@ const FeedPostCard = ({ postId }) => {
     } = usePostStore();
 
     const post = usePostStore((state) =>
-        state.feedPosts.find((p) => p._id === postId),
+        state.feedPosts.find((p) => p._id === postId)
     );
 
     const [starCount, setStarCount] = useState(post.stars?.length);
@@ -34,11 +34,11 @@ const FeedPostCard = ({ postId }) => {
 
     const [upvotes, setUpvotes] = useState(post.upvotes.length);
     const [isUpvoted, setIsUpvoted] = useState(
-        post.upvotes?.includes(user._id),
+        post.upvotes?.includes(user._id)
     );
 
     const [isDownvoted, setIsDownvoted] = useState(
-        post.downvotes.includes(user._id),
+        post.downvotes.includes(user._id)
     );
 
     const calculateDay = () => {
@@ -115,7 +115,7 @@ const FeedPostCard = ({ postId }) => {
     return (
         <Link
             to={`/post/${post._id}`}
-            className=" bg-black text-white rounded-lg shadow-[2px_2px_10px_black] border border-neutral-700 hover:bg-black/95 hover:border-neutral-500
+            className=" bg-black text-white rounded-lg shadow-[2px_2px_10px_gray] border border-neutral-700 hover:bg-black/95 hover:border-neutral-500
                      transition duration-200"
         >
             {/* Header */}
