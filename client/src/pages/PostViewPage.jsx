@@ -22,7 +22,7 @@ const PostViewPage = () => {
         post,
         starPost,
         unStarPost,
-        setStarredPosts,
+        fetchStarredPosts,
         upvotePost,
         revertUpvotePost,
         downvotePost,
@@ -115,7 +115,7 @@ const PostViewPage = () => {
         if (!user) return;
 
         const load = async () => {
-            setStarredPosts(user.starredPosts);
+            fetchStarredPosts();
             await fetchPostById(id);
         };
 
@@ -130,7 +130,6 @@ const PostViewPage = () => {
         setIsUpvoted(post.upvotes?.includes(user._id));
         setIsDownvoted(post.downvotes.includes(user._id));
 
-        // Use SERVER TRUTH, not client starredPosts
         setIsStarred(post.stars?.includes(user._id));
         setStarCount(post.stars?.length || 0);
     }, [post, user]);

@@ -24,7 +24,7 @@ const UserCard = ({ friend, user }) => {
 
     const isFriend =
         user?.friends?.some(
-            (f) => f?._id?.toString() === friend?._id?.toString()
+            (f) => f?._id?.toString() === friend?._id?.toString(),
         ) || false;
 
     const outgoingPending =

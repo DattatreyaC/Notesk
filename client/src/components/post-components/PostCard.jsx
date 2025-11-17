@@ -8,10 +8,14 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import usePostStore from "../../store/usePostStore";
 import MediaCarousel from "../MediaCarousel";
+import useAuthStore from "../../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 const PostCard = ({ post, onEdit, onDelete }) => {
+    const { user } = useAuthStore();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
+    const navigate = useNavigate();
 
     const { deletePost, isPostsLoading } = usePostStore();
 
@@ -21,6 +25,7 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                 setIsOpen(false);
             }
         }
+
         document.addEventListener("click", handleClickOutside);
         return () => {
             document.removeEventListener("click", handleClickOutside);
@@ -28,22 +33,34 @@ const PostCard = ({ post, onEdit, onDelete }) => {
     }, []);
 
     return (
-        <div className="max-w-lg w-full bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative">
+        <div
+            className={`max-w-lg w-full bg-black shadow-[1px_1px_5px_black] rounded-lg p-4 border border-white/10 relative ${
+                post.user._id === undefined &&
+                "cursor-pointer hover:bg-black/95 transition-colors duration-200"
+            }`}
+            onClick={() => {
+                if (post.user._id === undefined) {
+                    navigate(`/post/${post._id}`);
+                }
+            }}
+        >
             {/* Title + Menu Button */}
-            <div className="w-full flex items-center justify-between ">
-                <h2 className="text-xl md:text-2xl font-semibold text-white line-clamp-1 mb-2">
+            <div className="w-full flex items-center justify-between mb-2">
+                <h2 className="text-xl md:text-2xl font-semibold text-white line-clamp-1">
                     {post.title}
                 </h2>
 
-                <button
-                    className="text-white text-sm rounded-full p-1 hover:bg-white/20 duration-200"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setIsOpen((prev) => !prev);
-                    }}
-                >
-                    <EllipsisVertical size={18} />
-                </button>
+                {post.user._id !== undefined && (
+                    <button
+                        className="text-white text-sm rounded-full p-1 hover:bg-white/20 duration-200 "
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsOpen((prev) => !prev);
+                        }}
+                    >
+                        <EllipsisVertical size={18} />
+                    </button>
+                )}
             </div>
 
             {/* MEDIA Carousel */}
@@ -79,16 +96,19 @@ const PostCard = ({ post, onEdit, onDelete }) => {
                         {post.upvotes.length}
                     </span>
                 </div>
-                <div className="flex gap-1 text-sm items-center">
-                    <ArrowBigDown
-                        size={20}
-                        strokeWidth={1.5}
-                        className="text-rose-800"
-                    />{" "}
-                    <span className="text-neutral-300">
-                        {post.downvotes.length}
-                    </span>
-                </div>
+                {post.user._id !== undefined && (
+                    <div className="flex gap-1 text-sm items-center">
+                        <ArrowBigDown
+                            size={20}
+                            strokeWidth={1.5}
+                            className="text-rose-800"
+                        />{" "}
+                        <span className="text-neutral-300">
+                            {post.downvotes.length}
+                        </span>
+                    </div>
+                )}
+
                 <div className="flex gap-1 text-sm items-center">
                     <Star
                         size={20}

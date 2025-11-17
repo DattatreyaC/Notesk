@@ -18,6 +18,8 @@ import UserProfile from "./pages/UserProfile.jsx";
 import UserProfileSelf from "./components/profile-components/UserProfileSelf.jsx";
 import Feed from "./pages/Feed.jsx";
 import PostViewPage from "./pages/PostViewPage.jsx";
+import usePostStore from "./store/usePostStore.js";
+import StarredPostsPage from "./pages/StarredPostsPage.jsx";
 
 const App = () => {
     const { user, checkAuth, isCheckingAuth } = useAuthStore();
@@ -72,6 +74,10 @@ const App = () => {
                 <Route
                     path="/posts"
                     element={user ? <PostsPage /> : <LandingPage />}
+                ></Route>
+                <Route
+                    path="/starred"
+                    element={user ? <StarredPostsPage /> : <LandingPage />}
                 ></Route>
                 <Route
                     path="/post/:id"

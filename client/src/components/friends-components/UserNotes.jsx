@@ -4,7 +4,7 @@ import UserNoteCard from "../notes-page-components/UserNoteCard.jsx";
 const UserNotes = ({ notes }) => {
     if (!notes || notes.length === 0) {
         return (
-            <div className="w-full rounded border bg-neutral-300 roundedounded-md p-3 overflow-auto flex items-center justify-center text-neutral-700 italic">
+            <div className="w-full rounded bg-neutral-300 roundedounded-md p-3 overflow-auto flex items-center justify-center text-neutral-700 italic">
                 No public notes to display
             </div>
         );

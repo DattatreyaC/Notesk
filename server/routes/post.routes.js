@@ -10,6 +10,7 @@ import {
     getMyPosts,
     getPostById,
     getPostsOfUser,
+    getStarredPosts,
     revertDownvoteController,
     revertUpvoteController,
     starPostController,
@@ -27,10 +28,11 @@ router.delete("/deletePost/:id", isLoggedIn, deletePost);
 
 router.get("/feed", isLoggedIn, getFeedPosts);
 router.get("/myPosts", isLoggedIn, getMyPosts);
-router.get("/:id", isLoggedIn, getPostById);
 router.get("/friendsPosts", isLoggedIn, getFriendsPosts);
 router.get("/posts-of-user/:id", isLoggedIn, getPostsOfUser);
 router.get("/getAllPosts", isLoggedIn, getAllPosts);
+router.get("/starred", isLoggedIn, getStarredPosts);
+router.get("/:id", isLoggedIn, getPostById);
 
 router.post("/post/upvote/:id", isLoggedIn, upvotePostController);
 router.post("/post/unupvote/:id", isLoggedIn, revertUpvoteController);

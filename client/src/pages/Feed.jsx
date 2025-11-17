@@ -4,13 +4,13 @@ import FeedPostCard from "../components/post-components/FeedPostCard";
 import useAuthStore from "../store/useAuthStore";
 
 const Feed = () => {
-    const { feedPosts, setStarredPosts, fetchFeedPosts, isFeedLoading } =
+    const { feedPosts, fetchStarredPosts, fetchFeedPosts, isFeedLoading } =
         usePostStore();
     const { user } = useAuthStore();
 
     useEffect(() => {
         fetchFeedPosts();
-        setStarredPosts(user.starredPosts);
+        fetchStarredPosts();
     }, []);
 
     return (

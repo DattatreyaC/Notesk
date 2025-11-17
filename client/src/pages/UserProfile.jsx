@@ -55,7 +55,19 @@ const UserProfile = () => {
                 <article className="flex flex-col gap-3 w-full sm:w-lg md:w-xl">
                     {/* Header */}
                     <div className="flex flex-col items-center gap-2 border-b pb-3">
-                        <CircleUserRound size={80} strokeWidth={1} />
+                        <div className="rounded-full overflow-hidden border border-neutral-400/50 size-23 place-content-center">
+                            {userProfile.profilePicture ? (
+                                <img
+                                    src={userProfile.profilePicture?.url}
+                                    alt="Profile Picture"
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <p className="text-white text-[0.5rem] text-center">
+                                    No image
+                                </p>
+                            )}
+                        </div>
                         <h1 className="text-3xl sm:text-4xl md:text-5xl text-center font-semibold">
                             {userProfile?.firstname} {userProfile?.lastname}
                         </h1>

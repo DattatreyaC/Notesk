@@ -117,6 +117,11 @@ export const deletePost = async (req, res) => {
             $pull: { posts: post._id },
         });
 
+        await User.updateMany(
+            { starredPosts: post._id },
+            { $pull: { starredPosts: post._id } },
+        );
+
         return res.status(200).json({
             message: "Post deleted successfully",
             deletedPostId: post._id,
@@ -174,6 +179,16 @@ export const getAllPosts = async (req, res) => {
         return res.status(200).json(allPosts);
     } catch (error) {
         console.log(`Error in getAllPosts controller : ${error}`);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const getStarredPosts = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).populate("starredPosts");
+        return res.status(200).json({ starredPosts: user.starredPosts });
+    } catch (error) {
+        console.log(`Error in getting starred posts : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -277,28 +292,23 @@ export const starPostController = async (req, res) => {
     try {
         const id = req.params.id;
 
-        const post = await Post.findById(id);
+        const post = await Post.findByIdAndUpdate(id, {
+            $addToSet: {
+                stars: req.user._id,
+            },
+        }).populate("user");
 
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
 
-        // if (post.stars.includes(req.user._id)) {
-        //     return res
-        //         .status(400)
-        //         .json({ message: "You have already starred this post" });
-        // }
-
-        post.stars.push(req.user._id);
-        post.save();
-
         const updatedUser = await User.findByIdAndUpdate(req.user._id, {
-            $push: {
+            $addToSet: {
                 starredPosts: post._id,
             },
         });
 
-        return res.status(200).json({ message: "Post starred" });
+        return res.status(200).json({ message: "Post starred", post });
     } catch (error) {
         console.log(`Error in starPostController : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
@@ -309,21 +319,14 @@ export const unstarPostController = async (req, res) => {
     try {
         const id = req.params.id;
 
-        const post = await Post.findById(id);
+        const post = await Post.findByIdAndUpdate(id, {
+            $pull: {
+                stars: req.user._id,
+            },
+        }).populate("user");
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
-
-        // if (!post.stars.includes(req.user._id)) {
-        //     return res
-        //         .status(400)
-        //         .json({ message: "You do not have that post starred" });
-        // }
-
-        post.stars = post.stars.filter(
-            (starId) => starId.toString() !== req.user._id.toString(),
-        );
-        post.save();
 
         const updatedUser = await User.findByIdAndUpdate(req.user._id, {
             $pull: {
@@ -331,7 +334,7 @@ export const unstarPostController = async (req, res) => {
             },
         });
 
-        return res.status(200).json({ message: "Post unstarred" });
+        return res.status(200).json({ message: "Post unstarred", post });
     } catch (error) {
         console.log(`Error in unstarPostController : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
@@ -368,7 +371,7 @@ export const getPostById = async (req, res) => {
 
         return res.status(200).json(post);
     } catch (error) {
-        console.log(`Error in getting post : ${error}`);
+        console.log(`Error in getting post by id : ${error}`);
         return res.status(500).json({ message: "Internal server error" });
     }
 };

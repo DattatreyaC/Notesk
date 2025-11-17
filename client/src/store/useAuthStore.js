@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 
 const useAuthStore = create((set, get) => ({
     user: null,
-    isCheckingAuth: false,
+    isCheckingAuth: true,
     isAuthLoading: false,
     isUpdatingProfile: false,
     otpAction: null,
@@ -221,7 +221,7 @@ const useAuthStore = create((set, get) => ({
                         primary: "white",
                         secondary: "red",
                     },
-                }
+                },
             );
 
             return false;
@@ -255,12 +255,12 @@ const useAuthStore = create((set, get) => ({
 
             const response = await axiosInstance.post(
                 "/auth/reset-password",
-                payload
+                payload,
             );
 
             if (response.status === 200) {
                 toast.success(
-                    response.data.message || "Password reset successfully"
+                    response.data.message || "Password reset successfully",
                 );
 
                 set({ otpEmail: null });
@@ -269,7 +269,7 @@ const useAuthStore = create((set, get) => ({
             }
         } catch (error) {
             toast.error(
-                error?.response?.data?.message || "Something went wrong"
+                error?.response?.data?.message || "Something went wrong",
             );
         } finally {
             set({ isAuthLoading: false });

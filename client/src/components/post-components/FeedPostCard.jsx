@@ -26,20 +26,29 @@ const FeedPostCard = ({ postId }) => {
     } = usePostStore();
 
     const post = usePostStore((state) =>
-        state.feedPosts.find((p) => p._id === postId)
+        state.feedPosts.find((p) => p._id === postId),
     );
 
-    const [starCount, setStarCount] = useState(post.stars?.length);
-    const [isStarred, setIsStarred] = useState(starredPosts.includes(post._id));
+    const starCount = post.stars?.length ?? 0;
+
+    const [isStarred, setIsStarred] = useState(
+        starredPosts.some((p) => {
+            return p._id === postId;
+        }),
+    );
 
     const [upvotes, setUpvotes] = useState(post.upvotes.length);
     const [isUpvoted, setIsUpvoted] = useState(
-        post.upvotes?.includes(user._id)
+        post.upvotes?.includes(user._id),
     );
 
     const [isDownvoted, setIsDownvoted] = useState(
-        post.downvotes.includes(user._id)
+        post.downvotes.includes(user._id),
     );
+
+    useEffect(() => {
+        setIsStarred(starredPosts.some((p) => p._id === postId));
+    }, [starredPosts, postId]);
 
     const calculateDay = () => {
         const date = new Date(post.createdAt);
@@ -138,9 +147,9 @@ const FeedPostCard = ({ postId }) => {
                             e.preventDefault();
                             e.stopPropagation();
                             isStarred ? handleUnStar() : handleStar();
-                            isStarred
-                                ? setStarCount((prev) => prev - 1)
-                                : setStarCount((prev) => prev + 1);
+                            // isStarred
+                            //     ? setStarCount((prev) => prev - 1)
+                            //     : setStarCount((prev) => prev + 1);
                         }}
                         className={`group flex items-center gap-2 rounded-full border border-neutral-700/70 bg-neutral-700/40 hover:bg-neutral-700/40 transition-colors duration-200 px-1 py-0.5`}
                     >

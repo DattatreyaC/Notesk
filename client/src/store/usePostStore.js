@@ -44,8 +44,22 @@ const usePostStore = create((set, get) => ({
         }
     },
 
-    setStarredPosts: (posts) => {
-        set({ starredPosts: posts });
+    fetchStarredPosts: async () => {
+        try {
+            set({ isPostsLoading: true });
+
+            const response = await axiosInstance.get("/posts/starred");
+
+            if (response.status === 200) {
+                set({ starredPosts: response.data.starredPosts });
+                return true;
+            }
+        } catch (error) {
+            set({ starredPosts: [] });
+            return false;
+        } finally {
+            set({ isPostsLoading: false });
+        }
     },
 
     fetchPostById: async (id) => {
@@ -215,8 +229,14 @@ const usePostStore = create((set, get) => ({
             );
 
             if (response.status === 200) {
+                const updatedPost = response.data.post;
                 set((state) => ({
-                    starredPosts: [...state.starredPosts, postId],
+                    // 1. Update in feedPosts
+                    feedPosts: state.feedPosts.map((p) =>
+                        p._id === postId ? updatedPost : p,
+                    ),
+                    // 2. Add to starredPosts
+                    starredPosts: [...state.starredPosts, updatedPost],
                 }));
 
                 return true;
@@ -245,9 +265,16 @@ const usePostStore = create((set, get) => ({
                 `/posts/post/unstar/${postId}`,
             );
             if (response.status === 200) {
+                const updatedPost = response.data.post;
+
                 set((state) => ({
+                    // Update feedPosts
+                    feedPosts: state.feedPosts.map((p) =>
+                        p._id === postId ? updatedPost : p,
+                    ),
+                    // Remove from starredPosts
                     starredPosts: state.starredPosts.filter(
-                        (id) => id !== postId,
+                        (p) => p._id !== postId,
                     ),
                 }));
 
